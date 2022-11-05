@@ -1,0 +1,438 @@
+@font-face {
+    font-family: 'TitleFont';
+    src: url(fonts/titleFont.TTF);
+}
+@font-face {
+    font-family: 'BodyFont';
+    src: url(fonts/bodyFont.ttf);
+}
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    background-color: black;
+    color: white;
+    overflow: hidden;
+
+    @keyframes flicker {
+        0% {
+        opacity: 0.27861;
+        }
+        5% {
+        opacity: 0.34769;
+        }
+        10% {
+        opacity: 0.23604;
+        }
+        15% {
+        opacity: 0.90626;
+        }
+        20% {
+        opacity: 0.18128;
+        }
+        25% {
+        opacity: 0.83891;
+        }
+        30% {
+        opacity: 0.65583;
+        }
+        35% {
+        opacity: 0.67807;
+        }
+        40% {
+        opacity: 0.26559;
+        }
+        45% {
+        opacity: 0.84693;
+        }
+        50% {
+        opacity: 0.96019;
+        }
+        55% {
+        opacity: 0.08594;
+        }
+        60% {
+        opacity: 0.20313;
+        }
+        65% {
+        opacity: 0.71988;
+        }
+        70% {
+        opacity: 0.53455;
+        }
+        75% {
+        opacity: 0.37288;
+        }
+        80% {
+        opacity: 0.71428;
+        }
+        85% {
+        opacity: 0.70419;
+        }
+        90% {
+        opacity: 0.7003;
+        }
+        95% {
+        opacity: 0.36108;
+        }
+        100% {
+        opacity: 0.24387;
+        }
+      }
+    &::before {
+        content: '';
+        position: absolute;
+        background: radial-gradient(transparent 70%, rgba(18, 18, 145, 0.3));
+        height: 100%;
+        width: 100%;
+        pointer-events: none;
+    }
+    &::after {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: 
+            linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+            linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+        z-index: 9999;
+        background-size: 100% 2px, 3px 100%;
+        pointer-events: none;
+        animation: flicker 0.15s infinite;
+    }
+
+    .title {
+        font-family: 'TitleFont';
+        background: linear-gradient(rgba(253,29,29,1) 0%, rgba(252,176,69,1) 100%);
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(3px 3px rgba(131,58,180,1));
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+    }
+}
+
+
+
+#guessButtonContainer {
+    position: absolute;
+    bottom: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    height: auto;
+    gap: 5px;
+    .guess_radio {
+        display: none;
+    }
+    
+    .guess_radio:checked ~ .guess_Button{
+        @keyframes activeButton {
+            0% {
+                bottom: -20px;
+            }
+            50% {
+                bottom: -25px;
+            }
+            100% {
+                bottom: -20px;
+            }
+        }
+
+        border: 2px dashed rgba(252,176,69,1);
+        &::after {
+            content: '^';
+            position: absolute;
+            animation: activeButton .5s infinite;
+        }
+    }
+    .guess_Button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        font-family: 'BodyFont', sans-serif;
+        color: rgba(252,176,69,1);
+        text-shadow: 2px 2px rgba(131,58,180,1);
+        background: none;
+        border: 2px solid rgba(131,58,180,1);
+        border-radius: 15px;
+        width: 60px;
+        height: 60px;
+        transition: transform .2s;
+        cursor: pointer;
+        
+        &:hover {
+            transform: scale(1.1);
+
+            &::after {
+                content: '^';
+                position: absolute;
+                bottom: -20px;
+            }
+        }
+    }
+}
+
+@mixin bodyText {
+    font-family: 'BodyFont', sans-serif;
+    color: rgba(252,176,69,1);
+    text-shadow: 2px 2px rgba(131,58,180,1);
+}
+#announcement {
+    @include bodyText();
+
+    position: absolute;
+    top: 200px;
+    font-weight: 700;
+    text-transform: uppercase;
+    transform: scale(.2);
+    filter: blur(5px);
+    transition: .2s;
+}
+
+#guessCorrectOrNot {
+    @include bodyText();
+    position: absolute;
+    bottom: 15rem;
+    font-size: 16px;
+}
+
+.diceContainer{
+    animation: stationary 3s infinite;
+    position: relative;
+    margin-bottom: 80px;
+
+    .dice {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        transform-style: preserve-3d;
+        transform: rotateX(-45deg) rotateY(-45deg);
+        transition: 1s ease;
+        cursor: pointer;
+    
+        @keyframes rolling {
+            50% {
+                transform: rotateX(500deg) rotateY(500deg);
+            }
+        }
+        
+        @keyframes stationary {
+            50% {
+                transform: translateY(15px);
+            }
+        }
+
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    
+        .side1 {
+            transform: translateZ(50px);
+        }
+        .side6 {
+            transform: rotateX(180deg) translateZ(50px);
+        }
+        .side2 {
+            transform: rotateX(90deg) translateZ(50px);
+        }
+        .side5 {
+            transform: rotateX(-90deg) translateZ(50px);
+        }
+        .side3 {
+            transform: rotateY(-90deg) translateZ(50px);
+        }
+        .side4 {
+            transform: rotateY(90deg) translateZ(50px);
+        }
+    }
+
+    #emotes {
+        position: absolute;
+        top: -30px;
+        left: 32px;
+        width: 32px;
+        height: 32px;
+        z-index: 999;
+        animation: stationary 3s infinite;
+        animation-delay: 500ms;
+        pointer-events: none;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}    
+
+#hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    font-family: 'TitleFont', sans-serif;
+    text-shadow: 2px 2px rgba(131,58,180,1);
+    top: 10rem;
+    width: 50vh;
+
+    #numberOfTries {
+        width: auto;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        img {
+            width: 26px;
+            height: 26px;
+        }
+    }
+}
+
+#winNumLog {
+    display: none;
+}
+
+#guessLog {
+    font-family: 'TitleFont', sans-serif;
+    text-shadow: 2px 2px rgba(131,58,180,1);
+    position: absolute;
+    bottom: 13rem;
+}
+
+#gameRestart {
+    @include bodyText();
+    font-family: 'TitleFont', sans-serif;
+    display: none;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(131,58,180,1);
+    z-index: 999;
+    padding: 20px 20px;
+
+    h1{
+        margin-top: -40px;
+    }
+    .gameRestartButtons {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        bottom: 40px;
+
+        button {
+            @include bodyText();
+
+            padding-top: 5px;
+            border: none;
+            background: none;
+
+            @keyframes arrowAnimation {
+                50% {
+                    left: -15px;
+                }
+            }
+            &:hover {
+                &::before {
+                    content: '>';
+                    position: absolute;
+                    left: -10px;
+                    animation: arrowAnimation .5s infinite;
+                }
+            }
+        }
+    }
+
+}
+
+#perfectKoSir {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    z-index: 99999;
+    &::before {
+        content: 'PERFECT KO SIR?';
+        position: absolute;
+        top: 10px;
+        font-family: 'TitleFont', sans-serif;
+        font-size: 40px;
+        text-shadow: 0px 0px 10px black;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .perfectKoSir_buttons {
+        position: absolute;
+        bottom: 5rem;
+
+        button {
+            padding: 5px 10px;
+        }
+    }
+}
+
+@keyframes perfectSyempre {
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.perfectKoSir_omsim {
+    text-align: center;
+    animation: perfectSyempre .5s infinite;
+    @mixin perfectKoSir_Text {
+        position: absolute;
+        font-family: 'TitleFont', sans-serif;
+        font-size: 40px;
+        text-shadow: 0px 0px 10px black;
+        animation: perfectSyempre .5s infinite;
+    }
+    &::before {
+        content: 'YAY, THANK YOU SIR!!'!important;
+        top: 10px;
+        animation-delay: 100ms;
+        @include perfectKoSir_Text();
+    }
+    &::after {
+        content: '1 NA AKONG GRADE SIR ;)';
+        bottom: 10px;
+        animation-delay: 100ms;
+        @include perfectKoSir_Text();
+    }
+}
+
+#keyGuide {
+    display: block;
+    position: absolute;
+    bottom: 10rem;
+    height: 32px;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}

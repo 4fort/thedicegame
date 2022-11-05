@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Game</title>
+</head>
+<link rel="stylesheet" href="style.css">
+<body>
+
+    <div id="perfectKoSir">
+        <img src="assets/rateUwU.jpg" alt="">
+        <div class="perfectKoSir_buttons">
+            <button onclick="perfectKoSir_omsim()">Yes</button>
+            <button id="perfectKoSir_diliPwede" onmouseenter="perfectKoSir_diliPwede()">No</button>
+        </div>
+    </div>
+
+    <div class="title">
+        <h1>The Dice Game</h1>
+        <span>By: Dexter Fort Silva</span>
+    </div>
+
+    <div id="gameRestart">
+    </div>
+
+    <div id="hud">
+        <div id="score"></div>
+        <div id="numberOfTries"></div>
+    </div>
+    <div id="winNumLog"></div>
+
+    <div class="diceContainer">
+        <div id="emotes"></div>
+        <div class="dice" onclick="diceRoll()"></div>
+    </div>
+
+    <h1 id="guessCorrectOrNot"></h1>
+    <div id="guessLog"></div>
+
+    <div id="keyGuide"></div>
+    <div id="guessButtonContainer"></div>
+
+</body>
+<script src="main.js"></script>
+</html>

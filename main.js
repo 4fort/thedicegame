@@ -187,10 +187,10 @@ const keyGuideDisplay = (animator = 0) => {
 keyGuideDisplay();
 
 // DISPLAY GAME RESTART DIALOGUE
-const gameRestartDisplay = () => {
+const gameRestartDisplay = (e) => {
 
     
-    if(true){
+    if(e){
         setTimeout(() => {
             gameRestartElement.innerHTML = `
             <h1>YOU WIN!</h1>
@@ -266,7 +266,7 @@ const diceRoll = () => {
                 else{ 
                     // SHOWS GAME RESTART POPUP WHEN GAME ENDS
                     gameRestartElement.style.display = 'flex';
-                    gameRestartDisplay(false);
+                    gameRestartDisplay();
                     emoteDisplayWinOrLose(false);
                 }
             }, globalDelay);

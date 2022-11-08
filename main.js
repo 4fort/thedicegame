@@ -1,3 +1,8 @@
+const gameValues = () => {
+    tries = 5;
+    qualScore = 3;
+}
+
 const correctOrNot = document.getElementById('guessCorrectOrNot');
 const hud_numberOfTries = document.getElementById('numberOfTries');
 const hud_score = document.getElementById('score');
@@ -18,9 +23,12 @@ let diceSide; // WINNING NUMBER STORAGE
 let guessSide; // USER GUESS STORAGE
 var winLog = [];
 var guessLog = [];
-var tries = 5;
+var tries;
 var wins = 0;
+var qualScore;
 var globalDelay = 4050;
+
+gameValues();
 // #STORAGE VARIABLE
 
 // ################## GENERATOR / DISPLAY ELEMENTS ##################
@@ -257,7 +265,7 @@ const diceRoll = () => {
             dice.style.pointerEvents = 'none';
             // IF USER SCORES AT LEAST 3, OUTPUTS 'YOU WIN!', OTHERWISE 'YOU LOSE!'
             setTimeout(() => {
-                if(wins >= 3){
+                if(wins >= qualScore){
                     // SHOWS GAME RESTART POPUP WHEN GAME ENDS
                     gameRestartElement.style.display = 'flex';
                     gameRestartDisplay(true);
@@ -371,8 +379,8 @@ const gameRestart = () => {
     // RESETS THE VALUES
     guessNum = undefined;
     guessLog = [];
-    tries = 5;
     wins = 0;
+    gameValues();
 
     // REDISPLAYS THE DICE
     dice.innerHTML = '';

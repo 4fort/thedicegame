@@ -1,442 +1,490 @@
-const gameValues = () => {
-    tries = 5;
-    qualScore = 3;
-}
+const correctOrNot = document.getElementById("guessCorrectOrNot");
+const hud_numberOfTries = document.getElementById("numberOfTries");
+const hud_score = document.getElementById("score");
+const winNumLogOutput = document.getElementById("winNumLog");
+const guessLogOutput = document.getElementById("guessLog");
+const gameRestartElement = document.getElementById("gameRestart");
+const keyGuideElement = document.getElementById("keyGuide");
+const guessButtonsContainer = document.getElementById("guessButtonContainer");
+const dice = document.querySelector(".dice");
 
-const correctOrNot = document.getElementById('guessCorrectOrNot');
-const hud_numberOfTries = document.getElementById('numberOfTries');
-const hud_score = document.getElementById('score');
-const winNumLogOutput = document.getElementById('winNumLog');
-const guessLogOutput = document.getElementById('guessLog');
-const gameRestartElement = document.getElementById('gameRestart');
-const keyGuideElement = document.getElementById('keyGuide');
-const guessButtonsContainer = document.getElementById('guessButtonContainer');
-const dice = document.querySelector('.dice');
+// DIFFICULTY
 
-const emotes = document.getElementById('emotes');
-var emoteRandomizer = Math.floor(Math.random() * 4);
+// const DIFFICULTY = "hard";
+// const DIFFICULTY = "medium";
+// const DIFFICULTY = "easy";
+const DIFFICULTY = "test";
 
-var winNum;
-var guessNum;
+const emotes = document.getElementById("emotes");
+let emoteRandomizer = Math.floor(Math.random() * 4);
+
+let winNum;
+let guessNum;
+
 // STORAGE VARIABLE
 let diceSide; // WINNING NUMBER STORAGE
 let guessSide; // USER GUESS STORAGE
-var winLog = [];
-var guessLog = [];
-var tries;
-var wins = 0;
-var qualScore;
-var globalDelay = 4050;
+let winLog = [];
+let guessLog = [];
+let tries;
+let wins = 0;
+let qualifyingScore;
+let globalDelay = 4050;
+let gameEndingDelay = 2500;
 
-gameValues();
+let timesPlayed = 0;
+let itsMorhpingTime = 4;
+
+const setup = () => {
+  tries = 3;
+  qualifyingScore = 1;
+};
+
+setup();
 // #STORAGE VARIABLE
 
 // ################## GENERATOR / DISPLAY ELEMENTS ##################
 
 // DISPLAYS THE DICE
 const diceDisplay = () => {
-    for(let i = 1; i <= 6; i++){
-        dice.innerHTML += `
+  for (let i = 1; i <= 6; i++) {
+    dice.innerHTML += `
             <div class="face side${i}">
                 <img src="assets/diceFaces/${i}.png" alt="">
             </div>
             `;
-    }
-}
+  }
+};
 diceDisplay();
 
 // INITIAL EMOTE ANIMATION
-const emoteDisplay = (animator = 0) => {
-    
-    const animateEmote = () => {
-        emotes.innerHTML = `<img src="assets/emotes/emote_${animator}.png" alt="">`;
-        animator++;
-        if(animator == 7) clearInterval(animteEmote_interval);
-        console.log('animateEmote()');
-    };
-    const animteEmote_interval = setInterval(animateEmote, 50);
-
-}
+const emoteDisplay = () => {
+  let animator = 0;
+  const animateEmote = () => {
+    emotes.innerHTML = `<img src="assets/emotes/emote_${animator}.png" alt="">`;
+    animator++;
+    if (animator == 7) clearInterval(animteEmote_interval);
+    // console.log("animateEmote()");
+  };
+  const animteEmote_interval = setInterval(animateEmote, 50);
+};
 
 // COIN
 const coinDisplay = (animator = 0) => {
-    setInterval(() => {
-        hud_numberOfTries.innerHTML = `
+  setInterval(() => {
+    hud_numberOfTries.innerHTML = `
             <span>
                 [&nbsp${+tries}&nbsp*&nbsp]&nbsp
             </span>
             <img src="assets/coin/coin_${animator}.png" alt="">
         `;
-        animator++;
-        if(animator == 8) animator = 0;
-    }, 100);
+    animator++;
+    if (animator == 8) animator = 0;
+  }, 100);
 };
 coinDisplay();
 
 // EMOTES
 var emoteWinLoseID;
 const emoteDisplayWinOrLose = (win) => {
-    emoteDisplay();
+  emoteDisplay();
 
-    switch(diceSide) {
-        case 1:
-            setTimeout(() => {
-                emotes.innerHTML = `<img src="assets/emotes/emote_winNum1.png" alt="">`;
-                console.log('emoteDisplayLose()');
-            }, 400);
-        break;
-        case 2:
-            setTimeout(() => {
-                emotes.innerHTML = `<img src="assets/emotes/emote_winNum2.png" alt="">`;
-                console.log('emoteDisplayLose()');
-            }, 400);
-        break;
-        case 3:
-            setTimeout(() => {
-                emotes.innerHTML = `<img src="assets/emotes/emote_winNum3.png" alt="">`;
-                console.log('emoteDisplayLose()');
-            }, 400);
-        break;
-        case 4:
-            setTimeout(() => {
-                emotes.innerHTML = `<img src="assets/emotes/emote_winNum4.png" alt="">`;
-                console.log('emoteDisplayLose()');
-            }, 400);
-        break;
-        case 5:
-            setTimeout(() => {
-                emotes.innerHTML = `<img src="assets/emotes/emote_winNum5.png" alt="">`;
-                console.log('emoteDisplayLose()');
-            }, 400);
-        break;
-        case 6:
-            setTimeout(() => {
-                emotes.innerHTML = `<img src="assets/emotes/emote_winNum6.png" alt="">`;
-                console.log('emoteDisplayLose()');
-            }, 400);
-        break;
-        default:
-            setTimeout(() => {
-                emotes.innerHTML = `<img src="assets/emotes/emote_19.png" alt="">`;
-                console.log('emoteDisplayLose()');
-            }, 400);
-        break;
+  setTimeout(() => {
+    if (diceSide <= 6) {
+      emotes.innerHTML = `<img src="assets/emotes/emote_winNum${diceSide}.png" alt="">`;
+    } else {
+      emotes.innerHTML = `<img src="assets/emotes/emote_19.png" alt="">`;
     }
+  }, 400);
 
-    const emoteWinLose = () => {
-        if(win){
-            emotes.innerHTML = `<img src="assets/emotes/emote_Win${emoteRandomizer + 1}.png" alt="">`;
-        }
-        else{
-            emotes.innerHTML = `<img src="assets/emotes/emote_Lose${emoteRandomizer}.png" alt="">`;
-        }
-    };
-    emoteWinLoseID = setTimeout(emoteWinLose, 3000)
+  // switch (diceSide) {
+  //   case 1:
+  //     setTimeout(() => {
+  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum1.png" alt="">`;
+  //       // console.log("emoteDisplayLose()");
+  //     }, 400);
+  //     break;
+  //   case 2:
+  //     setTimeout(() => {
+  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum2.png" alt="">`;
+  //       // console.log("emoteDisplayLose()");
+  //     }, 400);
+  //     break;
+  //   case 3:
+  //     setTimeout(() => {
+  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum3.png" alt="">`;
+  //       // console.log("emoteDisplayLose()");
+  //     }, 400);
+  //     break;
+  //   case 4:
+  //     setTimeout(() => {
+  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum4.png" alt="">`;
+  //       // console.log("emoteDisplayLose()");
+  //     }, 400);
+  //     break;
+  //   case 5:
+  //     setTimeout(() => {
+  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum5.png" alt="">`;
+  //       // console.log("emoteDisplayLose()");
+  //     }, 400);
+  //     break;
+  //   case 6:
+  //     setTimeout(() => {
+  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum6.png" alt="">`;
+  //       // console.log("emoteDisplayLose()");
+  //     }, 400);
+  //     break;
+  //   default:
+  //     setTimeout(() => {
+  //       emotes.innerHTML = `<img src="assets/emotes/emote_19.png" alt="">`;
+  //       // console.log("emoteDisplayLose()");
+  //     }, 400);
+  //     break;
+  // }
+
+  const emoteWinLose = () => {
+    if (win) {
+      emotes.innerHTML = `<img src="assets/emotes/emote_Win${
+        emoteRandomizer + 1
+      }.png" alt="">`;
+    } else {
+      emotes.innerHTML = `<img src="assets/emotes/emote_Lose${emoteRandomizer}.png" alt="">`;
+    }
+  };
+  emoteWinLoseID = setTimeout(emoteWinLose, 3000);
 };
 
 const emoteDisplayInvalid = () => {
-    emoteDisplay();
-    
-    setTimeout(() => {
-        emotes.innerHTML = `<img src="assets/emotes/emote_Invalid${emoteRandomizer}.png" alt="">`;
-    }, 400);
+  emoteDisplay();
+
+  setTimeout(() => {
+    emotes.innerHTML = `<img src="assets/emotes/emote_Invalid${emoteRandomizer}.png" alt="">`;
+  }, 400);
 };
 
 const emoteDisplaySpinning = () => {
-    emoteDisplay();
+  emoteDisplay();
 
-    setTimeout((animator = 0) => {
-        const animateEmote = () => {
-            emotes.innerHTML = `<img src="assets/emotes/emote_Spin${animator}.png" alt="">`;
-            animator++;
-            if(animator == 4) animator = 0;
-            // console.log('animator '+animator);
-        };
-        const animteEmote_interval = setInterval(animateEmote, 200);
-        // ANIMATION STOPS AFTER 200ms
-        setTimeout(() => {
-            clearInterval(animteEmote_interval);
-        }, globalDelay - 500);
-    }, 200);
-}
+  setTimeout(() => {
+    let animator = 0;
+    const animateEmote = () => {
+      emotes.innerHTML = `<img src="assets/emotes/emote_Spin${animator}.png" alt="">`;
+      animator++;
+      if (animator == 4) animator = 0;
+      // console.log('animator '+animator);
+    };
+    const animteEmote_interval = setInterval(animateEmote, 200);
+    // ANIMATION STOPS AFTER 200ms
+    setTimeout(() => {
+      clearInterval(animteEmote_interval);
+    }, globalDelay - 500);
+  }, 200);
+};
 
 // DISPLAY HUD
 const hudDisplay = () => {
-    // hud_numberOfTries animates automaticall in line 36
-    hud_score.innerHTML = `
+  // hud_numberOfTries animates automaticall in line 36
+  hud_score.innerHTML = `
         SCORE ${wins}
     `;
-}
+};
 hudDisplay();
 
 // DISPLAY THE SIX GUESS BUTTONS
 const guessButtonsDisplay = () => {
-    guessButtonsContainer.innerHTML = '';
-    for(let i = 1; i <= 6; i++){
-        guessButtonsContainer.innerHTML += `
+  guessButtonsContainer.innerHTML = "";
+  for (let i = 1; i <= 6; i++) {
+    guessButtonsContainer.innerHTML += `
         <div>
             <input type="radio" name="guess_nums" value="${i}" onclick="guessButtonValue(this)" class="guess_radio" id="guessButton${i}">
             <label class="guess_Button" for="guessButton${i}">${i}</label>
         </div>
         `;
-    }
-}
+  }
+};
 guessButtonsDisplay();
 
 const keyGuideDisplay = (animator = 0) => {
-    setInterval(() => {
-        keyGuideElement.innerHTML = `
+  setInterval(() => {
+    keyGuideElement.innerHTML = `
             <img src="assets/keySpace${animator}.png" alt="">
         `;
-        animator++;
-        if(animator == 2) animator = 0;
-    }, 300);
-}
+    animator++;
+    if (animator == 2) animator = 0;
+  }, 300);
+};
 keyGuideDisplay();
 
 // DISPLAY GAME RESTART DIALOGUE
 const gameRestartDisplay = (e) => {
+  setTimeout(() => {
+    gameRestartElement.style.display = "flex";
 
-    
-    if(e){
-        setTimeout(() => {
-            gameRestartElement.innerHTML = `
-            <h1>YOU WIN!</h1>
-            <div class="gameRestartButtons">
-                <button id="restartYes" onclick="gameRestart()">Play again</button>
-                <button id="restartRate" onclick="gameRate()">Rate the game</button>
-            </div>
-            `;
-        }, 50);
+    if (e) {
+      gameRestartElement.innerHTML = `
+              <h1>YOU WIN!</h1>
+              <div class="gameRestartButtons">
+                  <button id="restartYes" onclick="gameRestart()">Play again</button>
+              </div>
+              `;
+    } else {
+      gameRestartElement.innerHTML = `
+              <h1>YOU LOSE!</h1>
+              <div class="gameRestartButtons">
+                  <button id="restartYes" onclick="gameRestart()">Play again</button>
+              </div>
+              `;
     }
-    else{
-        setTimeout(() => {
-            gameRestartElement.innerHTML = `
-            <h1>YOU LOSE!</h1>
-            <div class="gameRestartButtons">
-                <button id="restartYes" onclick="gameRestart()">Play again</button>
-                <button id="restartRate" onclick="gameRate()">Rate the game</button>
-            </div>
-            `;
-        }, 50);
-    }
-}
+  }, gameEndingDelay);
+};
 
 // ################ DICE PROGRAM #################
 
 // RANDOMIZES THE WINNING NUMBER
 const randomizer = () => {
-    winNum = Math.floor(Math.random() * 6) + 1;
-    console.log(winNum);
-}
+  //   if (DIFFICULTY === "easy") {
+  //     winNum = Math.random() < 0.9 ? guessNum : Math.floor(Math.random() * 6) + 1;
+  //   } else if (DIFFICULTY === "medium") {
+  //     winNum = Math.random() < 0.5 ? guessNum : Math.floor(Math.random() * 6) + 1;
+  //   } else if (DIFFICULTY === "hard") {
+  //     winNum = Math.random() < 0.1 ? guessNum : Math.floor(Math.random() * 6) + 1;
+  //   } else if (DIFFICULTY === "test") {
+  //     winNum = guessNum;
+  //     console.log(`TEST: ${winNum}, ${guessNum}`);
+  //   }
+
+  winNum = Math.floor(Math.random() * 6) + 1;
+  console.log("===========================");
+  console.log("Winning number is: ", winNum);
+  //   winNum = 1;
+  // console.log(winNum);
+  // console.log(diceSide);
+};
 randomizer();
 
 // ASSIGNS ${guessNum} FROM USER CHOICE OF NUMBER
-const guessButtonValue = (e) => {    
-    guessNum = Number(e.value);
-}
+const guessButtonValue = (e) => {
+  guessNum = Number(e.value);
+};
 
 // ROLLS THE DICE AND DECIDES WHETHER THE USER WINS OR NOT
-var keyID = 32;
+let keyID = 32;
 document.body.onkeyup = (e) => {
-    if(tries != 0){
-        if(e.keyCode == keyID) {
-            diceRoll();
-        }
+  if (tries != 0) {
+    if (e.keyCode == keyID) {
+      diceRoll();
     }
-}
+  }
+};
 const diceRoll = () => {
-    if(inputValidation()){
-        console.log(`${guessNum} INPUT`)
-        console.log(`${tries - 1} TRIES`);
-        // ADDS SCORE WHEN USER GUESSES CORRECTLY
-        if(guessNum == winNum){
-            wins++;
-            console.log(`${wins} WINS`);
-        }
-        else{
-            console.log(`${wins} WINS`);
-        }
-    
-        // DECREMENTS NUMBER OF  TRIES EVERY USER TRY
-        tries--
-        // IF USER TRIES REACHES 0, THE GAME ENDS
-        if(tries === 0){
-            dice.style.pointerEvents = 'none';
-            // IF USER SCORES AT LEAST 3, OUTPUTS 'YOU WIN!', OTHERWISE 'YOU LOSE!'
-            setTimeout(() => {
-                if(wins >= qualScore){
-                    // SHOWS GAME RESTART POPUP WHEN GAME ENDS
-                    gameRestartElement.style.display = 'flex';
-                    gameRestartDisplay(true);
-                    emoteDisplayWinOrLose(true);
-                }
-                else{ 
-                    // SHOWS GAME RESTART POPUP WHEN GAME ENDS
-                    gameRestartElement.style.display = 'flex';
-                    gameRestartDisplay();
-                    emoteDisplayWinOrLose(false);
-                }
-            }, globalDelay);
-        }
-        else{
-            dice.style.pointerEvents = 'all';
-        }
+  if (inputValidation()) {
+    incrementTimesPlayed();
 
-        // PUSHES USER GUESSES TO AN ARRAY AND DISPLAYS IT
-        guessLog.push(guessNum);
-        guessLogOutput.innerHTML = guessLog.join(' - ');
-
-        // STORES A NUMBER FROM LAST TURN NUMBERS. BECAUSE THE WINNUM IS PREDEFINED BEFORE THE GAME EVEN STARTED
-        diceSide = winNum;
-        guessSide = guessNum;
-        rollingDiceAnimation(diceSide, guessSide);
-
-        // RANDOMIZES EVERYTIME I CLICK THE DICE
-        randomizer();
+    // console.log(`${guessNum} INPUT`);
+    // console.log(`${tries - 1} TRIES`);
+    // ADDS SCORE WHEN USER GUESSES CORRECTLY
+    if (guessNum == winNum) {
+      wins++;
+      console.log(`${wins} WINS`);
+    } else {
+      console.log(`${wins} WINS`);
     }
-}
 
-const rollingDiceAnimation = (diceSide, guessSide) => {
-    keyID = undefined;
-    clearTimeout(emoteWinLoseID);
+    // DECREMENTS NUMBER OF TRIES EVERY USER TRY
+    tries--;
 
-    dice.style.animation = 'rolling 4s';
-    dice.style.pointerEvents = 'none';
-    guessButtonsContainer.style.display = 'none';
+    // PUSHES USER GUESSES TO AN ARRAY AND DISPLAYS IT
+    guessLog.push(guessNum);
+    guessLogOutput.innerHTML = guessLog.join(" - ");
 
-    // REMOVES THE USER GUESS CHOICE WHEN CHOICE HAS BEEN SUBMITTED
-    guessNum = undefined;
-    guessButtonsDisplay();
+    // STORES A NUMBER FROM LAST TURN NUMBERS. BECAUSE THE WINNUM IS PREDEFINED BEFORE THE GAME EVEN STARTED
+    diceSide = winNum;
+    guessSide = guessNum;
+    rollingDiceAnimation(diceSide, guessSide, false);
 
-    keyGuideElement.style.display = 'none';
-    setTimeout(() => {
-        switch (diceSide) {
-            case 1:
-                dice.style.transform = 'rotateX(0deg) rotateY(0deg)';
-                break;
-            case 6:
-                dice.style.transform = 'rotateX(180deg) rotateY(0deg)';
-                break;
-            case 2:
-                dice.style.transform = 'rotateX(-90deg) rotateY(0deg)';
-                break;
-            case 5:
-                dice.style.transform = 'rotateX(90deg) rotateY(0deg)';
-                break;
-            case 3:
-                dice.style.transform = 'rotateX(0deg) rotateY(90deg)';
-                break;
-            case 4:
-                dice.style.transform = 'rotateX(0deg) rotateY(-90deg)';
-                break;
-            default:
-                dice.style.transform = 'rotateX(-45deg) rotateY(-45deg)';
-                break;
+    // RANDOMIZES EVERYTIME I CLICK THE DICE
+    randomizer();
+
+    // IF USER TRIES REACHES 0, THE GAME ENDS
+    if (tries === 0) {
+      // IF USER SCORES AT LEAST 3, OUTPUTS 'YOU WIN!', OTHERWISE 'YOU LOSE!'
+      setTimeout(() => {
+        if (wins >= qualifyingScore) {
+          // SHOWS GAME RESTART POPUP WHEN GAME ENDS
+          gameRestartDisplay(true);
+          emoteDisplayWinOrLose(true);
+        } else {
+          // SHOWS GAME RESTART POPUP WHEN GAME ENDS
+          gameRestartDisplay();
+          emoteDisplayWinOrLose(false);
         }
+      }, globalDelay);
+    }
+  }
+};
 
-        if(diceSide == guessSide){
-            correctOrNot.innerHTML = 'You guessed right!';
-            emoteDisplayWinOrLose(true);
-        }
-        else{
-            correctOrNot.innerHTML = 'You guessed wrong!';
-            emoteDisplayWinOrLose();
-        }
+const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
+  keyID = undefined;
+  clearTimeout(emoteWinLoseID);
 
-        keyID = 32;
-        
-        winLog.push(diceSide);
-        winNumLogOutput.innerHTML = winLog.join(' - ');
+  let keyFrames = [
+    { transform: dice.style.transform },
+    { transform: "rotateX(500deg) rotateY(500deg)" },
+  ];
+  switch (diceSide) {
+    case 1:
+      keyFrames.push({ transform: "rotateX(0deg) rotateY(0deg)" });
+      break;
+    case 2:
+      keyFrames.push({ transform: "rotateX(-90deg) rotateY(0deg)" });
+      break;
+    case 3:
+      keyFrames.push({ transform: "rotateX(0deg) rotateY(90deg)" });
+      break;
+    case 4:
+      keyFrames.push({ transform: "rotateX(0deg) rotateY(-90deg)" });
+      break;
+    case 5:
+      keyFrames.push({ transform: "rotateX(90deg) rotateY(0deg)" });
+      break;
+    case 6:
+      keyFrames.push({ transform: "rotateX(180deg) rotateY(0deg)" });
+      break;
+    default:
+      keyFrames.push({ transform: "rotateX(-45deg) rotateY(-45deg)" });
+      break;
+  }
 
-        dice.style.animation = 'none';
-        dice.style.pointerEvents = 'all';
-        guessButtonsContainer.style.display = 'flex';
+  //   dice.style.animation = "rolling 4s";
+  //   dice.style.transform = "rotateX(500deg) rotateY(500deg)";
+  //   dice.style.transition = "transform 4s";
 
-        keyGuideElement.style.display = 'block';
-        hudDisplay();
-    },globalDelay);
-}
+  //   console.log(`keyFrames: ${keyFrames}`);
+  dice.animate(keyFrames, {
+    duration: 4000,
+    easing: "ease-in-out",
+    fill: "forwards",
+  });
+
+  dice.style.pointerEvents = "none";
+  guessButtonsContainer.style.display = "none";
+
+  // REMOVES THE USER GUESS CHOICE WHEN CHOICE HAS BEEN SUBMITTED
+  guessNum = undefined;
+  guessButtonsDisplay();
+
+  keyGuideElement.style.display = "none";
+  setTimeout(() => {
+    if (!isRestart) {
+      if (diceSide === guessSide) {
+        correctOrNot.innerHTML = "You guessed right!";
+        emoteDisplayWinOrLose(true);
+      } else {
+        correctOrNot.innerHTML = "You guessed wrong!";
+        emoteDisplayWinOrLose(false);
+      }
+    }
+
+    keyID = 32;
+
+    winLog.push(diceSide);
+    winNumLogOutput.innerHTML = winLog.join(" - ");
+
+    if (tries !== 0) {
+      dice.style.animation = "none";
+      dice.style.pointerEvents = "all";
+      guessButtonsContainer.style.display = "flex";
+      keyGuideElement.style.display = "block";
+    } else {
+      dice.style.animation = "none";
+      dice.style.pointerEvents = "none";
+      guessButtonsContainer.style.display = "none";
+      keyGuideElement.style.display = "none";
+    }
+
+    hudDisplay();
+  }, globalDelay);
+};
 
 // VALIDATES IF THE USER SELECTS A NUMBER FROM THE BUTTONS
 const inputValidation = () => {
-    if(guessNum == null){
-        correctOrNot.innerHTML = 'Please select any number from below.';
-        emoteDisplayInvalid();
-        emoteRandomizer = Math.floor(Math.random() * 4);
-        return false;
-    }
-    else{
-        correctOrNot.innerHTML = '';
-        emoteDisplaySpinning();
-        emoteRandomizer = Math.floor(Math.random() * 4);
-        return true;
-    }
-}
+  if (guessNum == null) {
+    correctOrNot.innerHTML = "Please select any number from below.";
+    emoteDisplayInvalid();
+    emoteRandomizer = Math.floor(Math.random() * 4);
+    return false;
+  } else {
+    correctOrNot.innerHTML = "";
+    emoteDisplaySpinning();
+    emoteRandomizer = Math.floor(Math.random() * 4);
+    return true;
+  }
+};
 
 const gameRestart = () => {
+  // RESETS THE VALUES
+  guessNum = undefined;
+  guessLog = [];
+  wins = 0;
+  setup();
 
-    // RESETS THE VALUES
-    guessNum = undefined;
-    guessLog = [];
-    wins = 0;
-    gameValues();
+  // REDISPLAYS THE DICE
+  //   dice.innerHTML = "";
+  // diceDisplay();
 
-    // REDISPLAYS THE DICE
-    dice.innerHTML = '';
-    diceDisplay();
+  // REMOVES SOME ELEMENTS AND ANIMATES DICE
+  // correctOrNot.innerHTML = "";
+  rollingDiceAnimation();
+  emoteDisplaySpinning();
+  setTimeout(() => {
+    correctOrNot.innerHTML = "";
+    // emoteDisplayWinOrLose(true);
+  }, globalDelay);
 
-    // REMOVES SOME ELEMENTS AND ANIMATES DICE
-    correctOrNot.innerHTML = '';
-    rollingDiceAnimation();
-    emoteDisplaySpinning();
-    setTimeout(() => {
-        correctOrNot.innerHTML = '';
-        emoteDisplayWinOrLose(true);
-    }, globalDelay);
+  // UPDATES HUD ELEMENT
+  hudDisplay();
 
-    // UPDATES HUD ELEMENT
-    hudDisplay();
+  // RESETS GUESS LOGS
+  guessLogOutput.innerHTML = "";
+  guessButtonsDisplay();
 
-    // RESETS GUESS LOGS
-    guessLogOutput.innerHTML = '';
-    guessButtonsDisplay();
+  // MAKES THE DICE CLICKABLE
+  dice.style.pointerEvents = "all";
 
-    // MAKES THE DICE CLICKABLE 
-    dice.style.pointerEvents = 'all';
+  gameRestartElement.innerHTML = "";
+  gameRestartElement.style.display = "none";
+};
 
-    gameRestartElement.innerHTML = '';
-    gameRestartElement.style.display = 'none';
+const incrementTimesPlayed = () => {
+  timesPlayed++;
 
-}
+  if (timesPlayed === itsMorhpingTime) {
+    timesPlayed = 0;
+    // winNum = Math.random() < 0.8 ? guessNum : Math.floor(Math.random() * 6) + 1;
+    winNum = guessNum;
+  } else {
+    // ELSE MO RANDOMIZE ANG WINNING SIDE SA DICE INTO ANY NUMBER BESIDES SA GI PICK NI PLAYER
+    while (winNum === guessNum) {
+      randomizer();
+    }
+    console.log("Rerandomized winNum: ", winNum);
+  }
 
-// ############ GAME RATING ###############
-const perfectLagi = document.getElementById('perfectKoSir');
-const gameRate = () => {
-
-    perfectLagi.style.display = 'flex';
-}
-
-const perfectKoSir_diliPwede = (x,y) => {
-    const perfectKoSir_diliPwedeButton = document.getElementById('perfectKoSir_diliPwede');
-    x = Math.ceil(Math.random() * 250) * (Math.round(Math.random()) ? 1 : -1);
-    y = Math.ceil(Math.random() * 250) * (Math.round(Math.random()) ? 1 : -1);
-
-    perfectKoSir_diliPwedeButton.style.transform = `translate(${x*2}%, ${y*2}%)`;
-}
-
-const perfectKoSir_omsim = () => {
-    perfectLagi.innerHTML = `<img src="assets/omsim.gif" alt="">`;
-    perfectLagi.classList.add('perfectKoSir_omsim')
-}
+  console.log(
+    "TimesPlayed: ",
+    timesPlayed,
+    " ; ItsMorphingTime: ",
+    itsMorhpingTime
+  );
+};
 
 // TO ADD
-// ADD SETTINGS 
+// ADD SETTINGS
 // ADD TURN ON MUSIC OR OFF SOUND FX
 // ADD CHEAT MODE TOGGLE - UNLI ROLLS, SHOWS THE CURRENT CORRECT NUMBER
 
 // FEATURES
-// *RECORDS USER SCORE 
+// *RECORDS USER SCORE
 // *SHOWS USERS REMAINING TRIES
 // *SHOWS IF THE USER GUESSED RIGHT OR NOT EVERY TURN
 // *HAS VALIDATION IF USER HAS PICKED A NUMBER OR NOT

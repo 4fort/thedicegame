@@ -327,9 +327,16 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   keyID = undefined;
   clearTimeout(emoteWinLoseID);
 
+  const degLimit = 1080;
+  const rX = Math.random() * degLimit;
+  const rY = Math.random() * degLimit;
+  const rZ = Math.random() * degLimit;
+
+  console.log(`rX: ${rX}, rY: ${rY}`);
+
   let keyFrames = [
     { transform: dice.style.transform },
-    { transform: "rotateX(500deg) rotateY(500deg)" },
+    { transform: `rotateX(${rX}deg) rotateY(${rY}deg) rotateZ(${rZ}deg)` },
   ];
   switch (diceSide) {
     case 1:
@@ -362,7 +369,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   //   console.log(`keyFrames: ${keyFrames}`);
   dice.animate(keyFrames, {
     duration: 4000,
-    easing: "ease-in-out",
+    easing: "ease-out",
     fill: "forwards",
   });
 

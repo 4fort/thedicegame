@@ -3,6 +3,7 @@ const hud_numberOfTries = document.getElementById("numberOfTries");
 const hud_score = document.getElementById("score");
 const winNumLogOutput = document.getElementById("winNumLog");
 const guessLogOutput = document.getElementById("guessLog");
+const gameResultsElement = document.getElementById("gameResults");
 const gameRestartElement = document.getElementById("gameRestart");
 const keyGuideElement = document.getElementById("keyGuide");
 const guessButtonsContainer = document.getElementById("guessButtonContainer");
@@ -30,13 +31,13 @@ let tries;
 let wins = 0;
 let qualifyingScore;
 let globalDelay = 4050;
-let gameEndingDelay = 2500;
+let gameEndingDelay = 1500;
 
 let timesPlayed = 0;
 let itsMorhpingTime = 4;
 
 const setup = () => {
-  tries = 3;
+  tries = 1;
   qualifyingScore = 1;
 };
 
@@ -85,13 +86,15 @@ const coinDisplay = (animator = 0) => {
 coinDisplay();
 
 // EMOTES
-var emoteWinLoseID;
+let emoteWinLoseID;
 const emoteDisplayWinOrLose = (win) => {
   emoteDisplay();
 
   setTimeout(() => {
-    if (diceSide <= 6) {
+    if (diceSide <= 6 && diceSide >= 1) {
       emotes.innerHTML = `<img src="assets/emotes/emote_winNum${diceSide}.png" alt="">`;
+    } else if (diceSide == 0) {
+      emoteWinLose();
     } else {
       emotes.innerHTML = `<img src="assets/emotes/emote_19.png" alt="">`;
     }
@@ -216,9 +219,9 @@ const keyGuideDisplay = (animator = 0) => {
 keyGuideDisplay();
 
 // DISPLAY GAME RESTART DIALOGUE
-const gameRestartDisplay = (e) => {
+const gameResultsDisplay = (e) => {
   setTimeout(() => {
-    gameRestartElement.style.display = "flex";
+    gameResultsElement.style.display = "flex";
 
     if (e) {
       gameRestartElement.innerHTML = `
@@ -230,8 +233,18 @@ const gameRestartDisplay = (e) => {
     } else {
       gameRestartElement.innerHTML = `
               <h1>YOU LOSE!</h1>
+              <div class="gameSummary">
+                <div class="gameResultPlayerGuesses">
+                  <p>Your guesses</p>
+                  <span>${guessLog.join(" - ")}</span>
+                </div>
+                <div class="gameResultWinningNumbers">
+                  <p>Winning Numbers</p>
+                  <span>${winLog.join(" - ")}</span>
+                </div>
+              </div>
               <div class="gameRestartButtons">
-                  <button id="restartYes" onclick="gameRestart()">Play again</button>
+                <button id="restartYes" onclick="gameRestart()">Play again</button>
               </div>
               `;
     }
@@ -311,11 +324,11 @@ const diceRoll = () => {
       setTimeout(() => {
         if (wins >= qualifyingScore) {
           // SHOWS GAME RESTART POPUP WHEN GAME ENDS
-          gameRestartDisplay(true);
+          gameResultsDisplay(true);
           emoteDisplayWinOrLose(true);
         } else {
           // SHOWS GAME RESTART POPUP WHEN GAME ENDS
-          gameRestartDisplay();
+          gameResultsDisplay(false);
           emoteDisplayWinOrLose(false);
         }
       }, globalDelay);
@@ -332,7 +345,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   const rY = Math.random() * degLimit;
   const rZ = Math.random() * degLimit;
 
-  console.log(`rX: ${rX}, rY: ${rY}`);
+  // console.log(`rX: ${rX}, rY: ${rY}`);
 
   let keyFrames = [
     { transform: dice.style.transform },
@@ -382,6 +395,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
 
   keyGuideElement.style.display = "none";
   setTimeout(() => {
+    console.log(isRestart);
     if (!isRestart) {
       if (diceSide === guessSide) {
         correctOrNot.innerHTML = "You guessed right!";
@@ -390,6 +404,9 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
         correctOrNot.innerHTML = "You guessed wrong!";
         emoteDisplayWinOrLose(false);
       }
+    } else {
+      correctOrNot.innerHTML = "Ready to play again?";
+      emoteDisplayWinOrLose(true);
     }
 
     keyID = 32;
@@ -408,8 +425,6 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
       guessButtonsContainer.style.display = "none";
       keyGuideElement.style.display = "none";
     }
-
-    hudDisplay();
   }, globalDelay);
 };
 
@@ -433,6 +448,8 @@ const gameRestart = () => {
   guessNum = undefined;
   guessLog = [];
   wins = 0;
+  winLog = [];
+  diceSide = 0;
   setup();
 
   // REDISPLAYS THE DICE
@@ -440,13 +457,9 @@ const gameRestart = () => {
   // diceDisplay();
 
   // REMOVES SOME ELEMENTS AND ANIMATES DICE
-  // correctOrNot.innerHTML = "";
-  rollingDiceAnimation();
+  correctOrNot.innerHTML = "";
+  rollingDiceAnimation(0, undefined, true);
   emoteDisplaySpinning();
-  setTimeout(() => {
-    correctOrNot.innerHTML = "";
-    // emoteDisplayWinOrLose(true);
-  }, globalDelay);
 
   // UPDATES HUD ELEMENT
   hudDisplay();
@@ -459,7 +472,7 @@ const gameRestart = () => {
   dice.style.pointerEvents = "all";
 
   gameRestartElement.innerHTML = "";
-  gameRestartElement.style.display = "none";
+  gameResultsElement.style.display = "none";
 };
 
 const incrementTimesPlayed = () => {
@@ -467,8 +480,8 @@ const incrementTimesPlayed = () => {
 
   if (timesPlayed === itsMorhpingTime) {
     timesPlayed = 0;
-    // winNum = Math.random() < 0.8 ? guessNum : Math.floor(Math.random() * 6) + 1;
-    winNum = guessNum;
+    winNum = Math.random() < 0.8 ? guessNum : Math.floor(Math.random() * 6) + 1;
+    // winNum = guessNum;
   } else {
     // ELSE MO RANDOMIZE ANG WINNING SIDE SA DICE INTO ANY NUMBER BESIDES SA GI PICK NI PLAYER
     while (winNum === guessNum) {

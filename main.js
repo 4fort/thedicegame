@@ -5,7 +5,9 @@ const winNumLogOutput = document.getElementById("winNumLog");
 const guessLogOutput = document.getElementById("guessLog");
 const gameResultsElement = document.getElementById("gameResults");
 const gameRestartElement = document.getElementById("gameRestart");
+const guideControlsElement = document.getElementById("guideControls");
 const keyGuideElement = document.getElementById("keyGuide");
+const touchGuideElement = document.getElementById("touchGuide");
 const guessButtonsContainer = document.getElementById("guessButtonContainer");
 const dice = document.querySelector(".dice");
 
@@ -14,7 +16,7 @@ const dice = document.querySelector(".dice");
 // const DIFFICULTY = "hard";
 // const DIFFICULTY = "medium";
 // const DIFFICULTY = "easy";
-const DIFFICULTY = "test";
+// const DIFFICULTY = 0.75;
 
 const emotes = document.getElementById("emotes");
 let emoteRandomizer = Math.floor(Math.random() * 4);
@@ -34,11 +36,12 @@ let globalDelay = 4050;
 let gameEndingDelay = 1500;
 
 let timesPlayed = 0;
-let itsMorhpingTime = 4;
+let itsMorhpingTime = 3;
+let difficultyPercentage = 0.6;
 
 const setup = () => {
-  tries = 1;
-  qualifyingScore = 1;
+  tries = 7;
+  qualifyingScore = 3;
 };
 
 setup();
@@ -207,7 +210,8 @@ const guessButtonsDisplay = () => {
 };
 guessButtonsDisplay();
 
-const keyGuideDisplay = (animator = 0) => {
+const keyGuideDisplay = () => {
+  let animator = 0;
   setInterval(() => {
     keyGuideElement.innerHTML = `
             <img src="assets/keySpace${animator}.png" alt="">
@@ -218,6 +222,18 @@ const keyGuideDisplay = (animator = 0) => {
 };
 keyGuideDisplay();
 
+// const touchGuideDisplay = () => {
+//   let animator = 0;
+//   setInterval(() => {
+//     touchGuideElement.innerHTML = `
+//             <img src="assets/touch${animator}.png" alt="">
+//         `;
+//     animator++;
+//     if (animator == 2) animator = 0;
+//   }, 300);
+// };
+// touchGuideDisplay();
+
 // DISPLAY GAME RESTART DIALOGUE
 const gameResultsDisplay = (e) => {
   setTimeout(() => {
@@ -226,6 +242,17 @@ const gameResultsDisplay = (e) => {
     if (e) {
       gameRestartElement.innerHTML = `
               <h1>YOU WIN!</h1>
+              <h3>Claim your price from the operator</h3>
+              <div class="gameSummary">
+                <div class="gameResultPlayerGuesses">
+                  <p>Your guesses</p>
+                  <span>${guessLog.join(" - ")}</span>
+                </div>
+                <div class="gameResultWinningNumbers">
+                  <p>Winning Numbers</p>
+                  <span>${winLog.join(" - ")}</span>
+                </div>
+              </div>
               <div class="gameRestartButtons">
                   <button id="restartYes" onclick="gameRestart()">Play again</button>
               </div>
@@ -239,7 +266,7 @@ const gameResultsDisplay = (e) => {
                   <span>${guessLog.join(" - ")}</span>
                 </div>
                 <div class="gameResultWinningNumbers">
-                  <p>Winning Numbers</p>
+                  <p>Winning Sides</p>
                   <span>${winLog.join(" - ")}</span>
                 </div>
               </div>
@@ -269,6 +296,7 @@ const randomizer = () => {
   winNum = Math.floor(Math.random() * 6) + 1;
   console.log("===========================");
   console.log("Winning number is: ", winNum);
+
   //   winNum = 1;
   // console.log(winNum);
   // console.log(diceSide);
@@ -340,10 +368,11 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   keyID = undefined;
   clearTimeout(emoteWinLoseID);
 
-  const degLimit = 1080;
-  const rX = Math.random() * degLimit;
-  const rY = Math.random() * degLimit;
-  const rZ = Math.random() * degLimit;
+  const degMax = 1080;
+  const degMin = 500;
+  const rX = Math.random() * (degMax - degMin) + degMin;
+  const rY = Math.random() * (degMax - degMin) + degMin;
+  const rZ = Math.random() * (degMax - degMin) + degMin;
 
   // console.log(`rX: ${rX}, rY: ${rY}`);
 
@@ -393,7 +422,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   guessNum = undefined;
   guessButtonsDisplay();
 
-  keyGuideElement.style.display = "none";
+  guideControlsElement.style.display = "none";
   setTimeout(() => {
     console.log(isRestart);
     if (!isRestart) {
@@ -411,20 +440,23 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
 
     keyID = 32;
 
-    winLog.push(diceSide);
-    winNumLogOutput.innerHTML = winLog.join(" - ");
+    if (diceSide <= 6 && diceSide >= 1) {
+      winLog.push(diceSide);
+      winNumLogOutput.innerHTML = winLog.join(" - ");
+    }
 
     if (tries !== 0) {
       dice.style.animation = "none";
       dice.style.pointerEvents = "all";
       guessButtonsContainer.style.display = "flex";
-      keyGuideElement.style.display = "block";
+      guideControlsElement.style.display = "flex";
     } else {
       dice.style.animation = "none";
       dice.style.pointerEvents = "none";
       guessButtonsContainer.style.display = "none";
-      keyGuideElement.style.display = "none";
+      guideControlsElement.style.display = "none";
     }
+    hudDisplay();
   }, globalDelay);
 };
 
@@ -447,9 +479,9 @@ const gameRestart = () => {
   // RESETS THE VALUES
   guessNum = undefined;
   guessLog = [];
+  diceSide = 0;
   wins = 0;
   winLog = [];
-  diceSide = 0;
   setup();
 
   // REDISPLAYS THE DICE
@@ -478,9 +510,18 @@ const gameRestart = () => {
 const incrementTimesPlayed = () => {
   timesPlayed++;
 
-  if (timesPlayed === itsMorhpingTime) {
+  const morphMax = 3 + 1;
+  const morphMin = 1;
+  itsMorhpingTime =
+    Math.floor(Math.random() * (morphMax - morphMin)) + morphMin;
+  console.log("itsMorhpingTime: ", itsMorhpingTime);
+
+  if (timesPlayed >= itsMorhpingTime) {
     timesPlayed = 0;
-    winNum = Math.random() < 0.8 ? guessNum : Math.floor(Math.random() * 6) + 1;
+    winNum =
+      Math.random() < difficultyPercentage
+        ? guessNum
+        : Math.floor(Math.random() * 6) + 1;
     // winNum = guessNum;
   } else {
     // ELSE MO RANDOMIZE ANG WINNING SIDE SA DICE INTO ANY NUMBER BESIDES SA GI PICK NI PLAYER

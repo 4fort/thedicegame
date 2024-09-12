@@ -11,15 +11,14 @@ const touchGuideElement = document.getElementById("touchGuide");
 const guessButtonsContainer = document.getElementById("guessButtonContainer");
 const dice = document.querySelector(".dice");
 const gameDebugElement = document.getElementById("gameDebug");
+const gameVersionElement = document.getElementById("gameVersion");
 
-const GAME_VERSION = "0.2.1";
+const GAME_VERSION = "0.2.3";
 
-// DIFFICULTY
-
-// const DIFFICULTY = "hard";
-// const DIFFICULTY = "medium";
-// const DIFFICULTY = "easy";
-// const DIFFICULTY = 0.75;
+// GAME CONSTANTS
+const TURNS_PER_GAME = 7;
+const PASSING_SCORE = 3;
+const DEFAULT_DIFFICULTY = 0.5;
 
 const emotes = document.getElementById("emotes");
 let emoteRandomizer = Math.floor(Math.random() * 4);
@@ -43,17 +42,24 @@ let itsMorhpingTime = 3;
 let difficultyPercentage;
 
 const setup = () => {
-  tries = 7;
-  qualifyingScore = 3;
+  tries = TURNS_PER_GAME;
+  qualifyingScore = PASSING_SCORE;
 
   if (!localStorage.getItem("skibidi")) {
-    localStorage.setItem("skibidi", 0.5);
+    localStorage.setItem("skibidi", DEFAULT_DIFFICULTY);
   }
   difficultyPercentage = Number(localStorage.getItem("skibidi"));
+  if (!localStorage.getItem("prevSkibidi")) {
+    localStorage.setItem("prevSkibidi", DEFAULT_DIFFICULTY);
+  }
+  if (localStorage.getItem("prevSkibidi") != DEFAULT_DIFFICULTY) {
+    localStorage.setItem("skibidi", DEFAULT_DIFFICULTY);
+    localStorage.setItem("prevSkibidi", DEFAULT_DIFFICULTY);
+  }
 };
 setup();
 
-console.log(difficultyPercentage);
+gameVersionElement.innerText = `v${GAME_VERSION}a © Fort`;
 
 // #STORAGE VARIABLE
 

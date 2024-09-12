@@ -10,6 +10,9 @@ const keyGuideElement = document.getElementById("keyGuide");
 const touchGuideElement = document.getElementById("touchGuide");
 const guessButtonsContainer = document.getElementById("guessButtonContainer");
 const dice = document.querySelector(".dice");
+const gameDebugElement = document.getElementById("gameDebug");
+
+const GAME_VERSION = "0.2.1";
 
 // DIFFICULTY
 
@@ -37,14 +40,21 @@ let gameEndingDelay = 1500;
 
 let timesPlayed = 0;
 let itsMorhpingTime = 3;
-let difficultyPercentage = 0.6;
+let difficultyPercentage;
 
 const setup = () => {
   tries = 7;
   qualifyingScore = 3;
-};
 
+  if (!localStorage.getItem("skibidi")) {
+    localStorage.setItem("skibidi", 0.5);
+  }
+  difficultyPercentage = Number(localStorage.getItem("skibidi"));
+};
 setup();
+
+console.log(difficultyPercentage);
+
 // #STORAGE VARIABLE
 
 // ################## GENERATOR / DISPLAY ELEMENTS ##################
@@ -309,14 +319,6 @@ const guessButtonValue = (e) => {
 };
 
 // ROLLS THE DICE AND DECIDES WHETHER THE USER WINS OR NOT
-let keyID = 32;
-document.body.onkeyup = (e) => {
-  if (tries != 0) {
-    if (e.keyCode == keyID) {
-      diceRoll();
-    }
-  }
-};
 const diceRoll = () => {
   if (inputValidation()) {
     incrementTimesPlayed();
@@ -510,10 +512,10 @@ const gameRestart = () => {
 const incrementTimesPlayed = () => {
   timesPlayed++;
 
-  const morphMax = 3 + 1;
+  const morphMax = 2;
   const morphMin = 1;
   itsMorhpingTime =
-    Math.floor(Math.random() * (morphMax - morphMin)) + morphMin;
+    Math.floor(Math.random() * (morphMax + 1 - morphMin)) + morphMin;
   console.log("itsMorhpingTime: ", itsMorhpingTime);
 
   if (timesPlayed >= itsMorhpingTime) {
@@ -537,6 +539,39 @@ const incrementTimesPlayed = () => {
     " ; ItsMorphingTime: ",
     itsMorhpingTime
   );
+};
+
+let keyID = 32;
+const increaseKeyId = 190;
+const decreaseKeyId = 188;
+
+document.body.onkeyup = (e) => {
+  if (tries != 0) {
+    if (e.keyCode == keyID) {
+      diceRoll();
+    }
+  }
+};
+document.body.onkeydown = (e) => {
+  if (e.keyCode == increaseKeyId || e.keyCode == decreaseKeyId) {
+    mutateDifficulty(e.keyCode);
+
+    gameDebugElement.innerHTML = `${difficultyPercentage}`;
+    gameDebugElement.animate({ opacity: [1, 0] }, 500);
+  }
+};
+
+const mutateDifficulty = (keyCode) => {
+  if (difficultyPercentage <= 0.9 && difficultyPercentage >= 0.1) {
+    if (keyCode === increaseKeyId && difficultyPercentage < 0.9) {
+      difficultyPercentage = Math.round((difficultyPercentage + 0.1) * 10) / 10;
+      console.log(difficultyPercentage);
+    } else if (keyCode === decreaseKeyId && difficultyPercentage > 0.1) {
+      difficultyPercentage = Math.round((difficultyPercentage - 0.1) * 10) / 10;
+      console.log(difficultyPercentage);
+    }
+  }
+  localStorage.setItem("skibidi", difficultyPercentage);
 };
 
 // TO ADD

@@ -12,13 +12,22 @@ const guessButtonsContainer = document.getElementById("guessButtonContainer");
 const dice = document.querySelector(".dice");
 const gameDebugElement = document.getElementById("gameDebug");
 const gameVersionElement = document.getElementById("gameVersion");
+const gameStartElement = document.getElementById("gameStart");
 
 const GAME_VERSION = "0.2.3";
 
 // GAME CONSTANTS
-const TURNS_PER_GAME = 7;
-const PASSING_SCORE = 3;
-const DEFAULT_DIFFICULTY = 0.5;
+const GAME_1_VALUES = {
+  TURNS_PER_GAME: 5,
+  PASSING_SCORE: 1,
+  DEFAULT_DIFFICULTY: 0.1,
+};
+const GAME_2_VALUES = {
+  TURNS_PER_GAME: 7,
+  PASSING_SCORE: 3,
+  DEFAULT_DIFFICULTY: 0.5,
+};
+// const DEFAULT_DIFFICULTY = 0.5;
 
 const emotes = document.getElementById("emotes");
 let emoteRandomizer = Math.floor(Math.random() * 4);
@@ -41,7 +50,36 @@ let timesPlayed = 0;
 let itsMorhpingTime = 3;
 let difficultyPercentage;
 
-const setup = () => {
+const showHud = (isShown) => {
+  console.log(isShown);
+  if (isShown) {
+    dice.style.pointerEvents = "all";
+    guessButtonsContainer.style.display = "flex";
+    guideControlsElement.style.display = "flex";
+  } else {
+    dice.style.pointerEvents = "none";
+    guessButtonsContainer.style.display = "none";
+    guideControlsElement.style.display = "none";
+  }
+  dice.style.animation = "none";
+};
+
+const gameModeSelect = (mode) => {
+  gameStartElement.style.display = "flex";
+  showHud(true);
+
+  switch (mode) {
+    case "game1":
+      setup(GAME_1_VALUES);
+      break;
+    case "game2":
+      setup(GAME_2_VALUES);
+      break;
+  }
+};
+gameModeSelect();
+
+const setup = ({ TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
   tries = TURNS_PER_GAME;
   qualifyingScore = PASSING_SCORE;
 
@@ -56,12 +94,11 @@ const setup = () => {
     localStorage.setItem("skibidi", DEFAULT_DIFFICULTY);
     localStorage.setItem("prevSkibidi", DEFAULT_DIFFICULTY);
   }
+
+  gameStartElement.style.display = "none";
 };
-setup();
 
 gameVersionElement.innerText = `v${GAME_VERSION}a © Fort`;
-
-// #STORAGE VARIABLE
 
 // ################## GENERATOR / DISPLAY ELEMENTS ##################
 
@@ -90,11 +127,18 @@ const emoteDisplay = () => {
 };
 
 // COIN
-const coinDisplay = (animator = 0) => {
+const coinDisplay = () => {
+  let animator = 0;
+
   setInterval(() => {
+    let triesLeftDisplay = tries;
+
+    if (tries === 0) {
+      triesLeftDisplay = "O";
+    }
     hud_numberOfTries.innerHTML = `
             <span>
-                [&nbsp${+tries}&nbsp*&nbsp]&nbsp
+                [&nbsp${triesLeftDisplay}&nbsp*&nbsp]&nbsp
             </span>
             <img src="assets/coin/coin_${animator}.png" alt="">
         `;
@@ -204,13 +248,17 @@ const emoteDisplaySpinning = () => {
 };
 
 // DISPLAY HUD
-const hudDisplay = () => {
+const showScore = () => {
   // hud_numberOfTries animates automaticall in line 36
+  let scoreDisplay = wins;
+  if (wins === 0) {
+    scoreDisplay = "O";
+  }
   hud_score.innerHTML = `
-        SCORE ${wins}
+        SCORE ${scoreDisplay}
     `;
 };
-hudDisplay();
+showScore();
 
 // DISPLAY THE SIX GUESS BUTTONS
 const guessButtonsDisplay = () => {
@@ -354,6 +402,16 @@ const diceRoll = () => {
     // RANDOMIZES EVERYTIME I CLICK THE DICE
     randomizer();
 
+    // if (wins === qualifyingScore) {
+    //   setTimeout(() => {
+    //     gameResultsDisplay(true);
+    //   }, globalDelay);
+    // } else if (tries < qualifyingScore) {
+    //   setTimeout(() => {
+    //     gameResultsDisplay(false);
+    //   }, globalDelay);
+    // }
+
     // IF USER TRIES REACHES 0, THE GAME ENDS
     if (tries === 0) {
       // IF USER SCORES AT LEAST 3, OUTPUTS 'YOU WIN!', OTHERWISE 'YOU LOSE!'
@@ -453,18 +511,8 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
       winNumLogOutput.innerHTML = winLog.join(" - ");
     }
 
-    if (tries !== 0) {
-      dice.style.animation = "none";
-      dice.style.pointerEvents = "all";
-      guessButtonsContainer.style.display = "flex";
-      guideControlsElement.style.display = "flex";
-    } else {
-      dice.style.animation = "none";
-      dice.style.pointerEvents = "none";
-      guessButtonsContainer.style.display = "none";
-      guideControlsElement.style.display = "none";
-    }
-    hudDisplay();
+    showHud(tries !== 0);
+    showScore();
   }, globalDelay);
 };
 
@@ -490,7 +538,7 @@ const gameRestart = () => {
   diceSide = 0;
   wins = 0;
   winLog = [];
-  setup();
+  // setup();
 
   // REDISPLAYS THE DICE
   //   dice.innerHTML = "";
@@ -501,8 +549,8 @@ const gameRestart = () => {
   rollingDiceAnimation(0, undefined, true);
   emoteDisplaySpinning();
 
-  // UPDATES HUD ELEMENT
-  hudDisplay();
+  // UPDATES SCORE HUD ELEMENT
+  showScore();
 
   // RESETS GUESS LOGS
   guessLogOutput.innerHTML = "";
@@ -513,6 +561,8 @@ const gameRestart = () => {
 
   gameRestartElement.innerHTML = "";
   gameResultsElement.style.display = "none";
+
+  gameModeSelect();
 };
 
 const incrementTimesPlayed = () => {

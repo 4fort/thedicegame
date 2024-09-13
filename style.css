@@ -399,17 +399,54 @@ body .title {
   bottom: 13rem;
 }
 
-#gameResults {
+#gameResults,
+#gameStart {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 999;
-  background: rgba(0, 0, 0, 0.3);
-  display: none;
+  background: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
+}
+#gameResults,
+#gameStart {
+  display: none;
+}
+#gameStart #gameStartMenu #gameStartButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+#gameStart #gameStartMenu button {
+  background: none;
+  border: none;
+  text-shadow: 2px 2px rgb(131, 58, 180);
+  font-size: 1.5rem;
+  font-family: "BodyFont", sans-serif;
+  color: rgb(252, 176, 69);
+  text-shadow: 2px 2px rgb(131, 58, 180);
+  width: 200px;
+  height: auto;
+  border: 2px solid rgb(131, 58, 180);
+  z-index: 999;
+  padding: 10px;
+  margin: 20px 0;
+  cursor: pointer;
+}
+#gameStart #gameStartMenu button:hover {
+  background: rgb(131, 58, 180);
+  color: rgb(252, 176, 69);
+  text-shadow: 2px 2px rgb(131, 58, 180);
+  border: 2px solid rgb(252, 176, 69);
+}
+#gameStart #gameStartMenu button h2,
+#gameStart #gameStartMenu button span {
+  font-family: "TitleFont", sans-serif;
 }
 #gameResults .gameSummary {
   font-family: "BodyFont", sans-serif;
@@ -426,7 +463,8 @@ body .title {
 #gameResults .gameSummary span::before {
   content: "* ";
 }
-#gameResults #gameRestart {
+#gameResults #gameRestart,
+#gameStart #gameStartMenu {
   font-family: "BodyFont", sans-serif;
   color: rgb(252, 176, 69);
   text-shadow: 2px 2px rgb(131, 58, 180);
@@ -435,7 +473,7 @@ body .title {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  min-height: 200px;
+  /* min-height: 200px; */
   height: auto;
   background: rgba(0, 0, 0, 0.8);
   border: 2px solid rgb(131, 58, 180);

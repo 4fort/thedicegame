@@ -14,7 +14,7 @@ const gameDebugElement = document.getElementById("gameDebug");
 const gameVersionElement = document.getElementById("gameVersion");
 const gameStartElement = document.getElementById("gameStart");
 
-const GAME_VERSION = "0.2.3";
+const GAME_VERSION = "0.2.5";
 
 // GAME CONSTANTS
 const GAME_1_VALUES = {
@@ -610,8 +610,11 @@ const incrementTimesPlayed = () => {
 };
 
 let keyID = 32;
-const increaseKeyId = 190;
-const decreaseKeyId = 188;
+const increaseKeyId_Primary = 190;
+const decreaseKeyId_Primary = 188;
+const increaseKeyId_Scondary = 67;
+const decreaseKeyId_Secondary = 88;
+// OPTION: X, C, V, B, N for difficulty percentage presets
 
 document.body.onkeyup = (e) => {
   if (tries != 0) {
@@ -621,7 +624,12 @@ document.body.onkeyup = (e) => {
   }
 };
 document.body.onkeydown = (e) => {
-  if (e.keyCode == increaseKeyId || e.keyCode == decreaseKeyId) {
+  if (
+    e.keyCode == increaseKeyId_Primary ||
+    e.keyCode == increaseKeyId_Scondary ||
+    e.keyCode == decreaseKeyId_Primary ||
+    e.keyCode == decreaseKeyId_Secondary
+  ) {
     mutateDifficulty(e.keyCode);
 
     gameDebugElement.innerHTML = `${difficultyPercentage}`;
@@ -631,10 +639,18 @@ document.body.onkeydown = (e) => {
 
 const mutateDifficulty = (keyCode) => {
   if (difficultyPercentage <= 0.9 && difficultyPercentage >= 0.1) {
-    if (keyCode === increaseKeyId && difficultyPercentage < 0.9) {
+    if (
+      (keyCode === increaseKeyId_Primary ||
+        keyCode === increaseKeyId_Scondary) &&
+      difficultyPercentage < 0.9
+    ) {
       difficultyPercentage = Math.round((difficultyPercentage + 0.1) * 10) / 10;
       console.log(difficultyPercentage);
-    } else if (keyCode === decreaseKeyId && difficultyPercentage > 0.1) {
+    } else if (
+      (keyCode === decreaseKeyId_Primary ||
+        keyCode === decreaseKeyId_Secondary) &&
+      difficultyPercentage > 0.1
+    ) {
       difficultyPercentage = Math.round((difficultyPercentage - 0.1) * 10) / 10;
       console.log(difficultyPercentage);
     }

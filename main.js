@@ -83,20 +83,23 @@ const setup = ({ TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
   tries = TURNS_PER_GAME;
   qualifyingScore = PASSING_SCORE;
 
-  if (!localStorage.getItem("skibidi")) {
+  if (
+    !localStorage.getItem("skibidi") ||
+    isNaN(localStorage.getItem("skibidi"))
+  ) {
     localStorage.setItem("skibidi", DEFAULT_DIFFICULTY);
   }
   difficultyPercentage = Number(localStorage.getItem("skibidi"));
+
   if (!localStorage.getItem("prevSkibidi")) {
     localStorage.setItem("prevSkibidi", DEFAULT_DIFFICULTY);
   }
-  if (localStorage.getItem("prevSkibidi") != DEFAULT_DIFFICULTY) {
+  if (localStorage.getItem("prevSkibidi") !== DEFAULT_DIFFICULTY) {
     localStorage.setItem("skibidi", DEFAULT_DIFFICULTY);
     localStorage.setItem("prevSkibidi", DEFAULT_DIFFICULTY);
   }
 
   gameStartElement.style.display = "none";
-  globalDelay = 4050;
 
   showHud(true);
 };
@@ -546,7 +549,6 @@ const gameRestart = () => {
   wins = 0;
   winLog = [];
 
-  globalDelay = 500;
   // setup();
 
   // REDISPLAYS THE DICE

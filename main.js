@@ -66,7 +66,7 @@ const showHud = (isShown) => {
 
 const gameModeSelect = (mode) => {
   gameStartElement.style.display = "flex";
-  showHud(true);
+  showHud(false);
 
   switch (mode) {
     case "game1":
@@ -96,6 +96,7 @@ const setup = ({ TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
   }
 
   gameStartElement.style.display = "none";
+  showHud(true);
 };
 
 gameVersionElement.innerText = `v${GAME_VERSION}a © Fort`;
@@ -131,7 +132,7 @@ const coinDisplay = () => {
   let animator = 0;
 
   setInterval(() => {
-    let triesLeftDisplay = tries;
+    let triesLeftDisplay = tries ? tries : "O";
 
     if (tries === 0) {
       triesLeftDisplay = "O";
@@ -431,6 +432,8 @@ const diceRoll = () => {
 };
 
 const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
+  showHud(false);
+
   keyID = undefined;
   clearTimeout(emoteWinLoseID);
 
@@ -481,16 +484,16 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
     fill: "forwards",
   });
 
-  dice.style.pointerEvents = "none";
-  guessButtonsContainer.style.display = "none";
+  // dice.style.pointerEvents = "none";
+  // guessButtonsContainer.style.display = "none";
 
   // REMOVES THE USER GUESS CHOICE WHEN CHOICE HAS BEEN SUBMITTED
   guessNum = undefined;
   guessButtonsDisplay();
 
-  guideControlsElement.style.display = "none";
+  // guideControlsElement.style.display = "none";
+
   setTimeout(() => {
-    console.log(isRestart);
     if (!isRestart) {
       if (diceSide === guessSide) {
         correctOrNot.innerHTML = "You guessed right!";
@@ -547,19 +550,17 @@ const gameRestart = () => {
   // REMOVES SOME ELEMENTS AND ANIMATES DICE
   correctOrNot.innerHTML = "";
   rollingDiceAnimation(0, undefined, true);
-  emoteDisplaySpinning();
 
   // UPDATES SCORE HUD ELEMENT
   showScore();
 
   // RESETS GUESS LOGS
   guessLogOutput.innerHTML = "";
-  guessButtonsDisplay();
+  // guessButtonsDisplay();
 
   // MAKES THE DICE CLICKABLE
-  dice.style.pointerEvents = "all";
+  // dice.style.pointerEvents = "all";
 
-  gameRestartElement.innerHTML = "";
   gameResultsElement.style.display = "none";
 
   gameModeSelect();

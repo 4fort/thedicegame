@@ -631,6 +631,7 @@ body .title {
   font-size: 0.5rem;
   opacity: 0;
   pointer-events: none;
+  z-index: 99999;
 }
 
 #gameVersion {

@@ -51,7 +51,7 @@ let itsMorhpingTime = 3;
 let difficultyPercentage;
 
 const showHud = (isShown) => {
-  console.log(isShown);
+  // console.log(isShown);
   if (isShown) {
     dice.style.pointerEvents = "all";
     guessButtonsContainer.style.display = "flex";
@@ -434,6 +434,8 @@ const diceRoll = () => {
 const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   showHud(false);
 
+  let animationDoneTimeout;
+
   keyID = undefined;
   clearTimeout(emoteWinLoseID);
 
@@ -575,19 +577,24 @@ const incrementTimesPlayed = () => {
     Math.floor(Math.random() * (morphMax + 1 - morphMin)) + morphMin;
   console.log("itsMorhpingTime: ", itsMorhpingTime);
 
+  const randomNum = Math.random();
+
+  while (winNum === guessNum) {
+    randomizer();
+  }
+  console.log("Rerandomized winNum: ", winNum);
+
   if (timesPlayed >= itsMorhpingTime) {
     timesPlayed = 0;
-    winNum =
-      Math.random() < difficultyPercentage
-        ? guessNum
-        : Math.floor(Math.random() * 6) + 1;
+    console.log(
+      "Random Number: ",
+      randomNum,
+      " ; Difficulty: ",
+      difficultyPercentage,
+      randomNum < difficultyPercentage
+    );
+    winNum = randomNum < difficultyPercentage ? guessNum : winNum;
     // winNum = guessNum;
-  } else {
-    // ELSE MO RANDOMIZE ANG WINNING SIDE SA DICE INTO ANY NUMBER BESIDES SA GI PICK NI PLAYER
-    while (winNum === guessNum) {
-      randomizer();
-    }
-    console.log("Rerandomized winNum: ", winNum);
   }
 
   console.log(

@@ -96,6 +96,8 @@ const setup = ({ TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
   }
 
   gameStartElement.style.display = "none";
+  globalDelay = 4050;
+
   showHud(true);
 };
 
@@ -543,6 +545,8 @@ const gameRestart = () => {
   diceSide = 0;
   wins = 0;
   winLog = [];
+
+  globalDelay = 500;
   // setup();
 
   // REDISPLAYS THE DICE
@@ -551,7 +555,7 @@ const gameRestart = () => {
 
   // REMOVES SOME ELEMENTS AND ANIMATES DICE
   correctOrNot.innerHTML = "";
-  rollingDiceAnimation(0, undefined, true);
+  // rollingDiceAnimation(0, undefined, true);
 
   // UPDATES SCORE HUD ELEMENT
   showScore();

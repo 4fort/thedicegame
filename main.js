@@ -597,9 +597,9 @@ const incrementTimesPlayed = () => {
       randomNum,
       " ; Difficulty: ",
       difficultyPercentage,
-      randomNum < difficultyPercentage
+      randomNum <= difficultyPercentage
     );
-    winNum = randomNum < difficultyPercentage ? guessNum : winNum;
+    winNum = randomNum <= difficultyPercentage ? guessNum : winNum;
     // winNum = guessNum;
   }
 

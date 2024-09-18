@@ -14,7 +14,7 @@ const gameDebugElement = document.getElementById("gameDebug");
 const gameVersionElement = document.getElementById("gameVersion");
 const gameStartElement = document.getElementById("gameStart");
 
-const GAME_VERSION = "0.2.5";
+const GAME_VERSION = "0.2.8";
 
 // GAME CONSTANTS
 const GAME_1_VALUES = {
@@ -89,8 +89,6 @@ const setup = ({ TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
   ) {
     localStorage.setItem("skibidi", DEFAULT_DIFFICULTY);
   }
-  difficultyPercentage = Number(localStorage.getItem("skibidi"));
-
   if (!localStorage.getItem("prevSkibidi")) {
     localStorage.setItem("prevSkibidi", DEFAULT_DIFFICULTY);
   }
@@ -99,9 +97,13 @@ const setup = ({ TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
     localStorage.setItem("prevSkibidi", DEFAULT_DIFFICULTY);
   }
 
+  difficultyPercentage = Number(localStorage.getItem("skibidi"));
+
   gameStartElement.style.display = "none";
 
   showHud(true);
+
+  console.log("difficultyPercentage: ", difficultyPercentage);
 };
 
 gameVersionElement.innerText = `v${GAME_VERSION}a © Fort`;
@@ -597,9 +599,9 @@ const incrementTimesPlayed = () => {
       randomNum,
       " ; Difficulty: ",
       difficultyPercentage,
-      randomNum <= difficultyPercentage
+      randomNum < difficultyPercentage
     );
-    winNum = randomNum <= difficultyPercentage ? guessNum : winNum;
+    winNum = randomNum < difficultyPercentage ? guessNum : winNum;
     // winNum = guessNum;
   }
 

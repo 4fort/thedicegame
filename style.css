@@ -213,25 +213,29 @@ body .title {
 }
 @-webkit-keyframes activeButton {
   0% {
-    bottom: -20px;
+    bottom: -3rem;
   }
   50% {
-    bottom: -25px;
+    bottom: -3.3rem;
   }
   100% {
-    bottom: -20px;
+    bottom: -3rem;
   }
 }
 @keyframes activeButton {
   0% {
-    bottom: -20px;
+    bottom: -3rem;
   }
   50% {
-    bottom: -25px;
+    bottom: -3.3rem;
   }
   100% {
-    bottom: -20px;
+    bottom: -3rem;
   }
+}
+#guessButtonContainer {
+  display: flex;
+  gap: 2rem;
 }
 #guessButtonContainer .guess_radio:checked ~ .guess_Button::after {
   content: "^";
@@ -245,13 +249,16 @@ body .title {
   align-items: center;
   position: relative;
   font-family: "BodyFont", sans-serif;
+  font-size: 2.5rem;
   color: rgb(252, 176, 69);
-  text-shadow: 2px 2px rgb(131, 58, 180);
+  --text-shadow-pos: .3rem;
+  text-shadow: var(--text-shadow-pos) var(--text-shadow-pos) rgb(131, 58, 180);
   background: none;
   border: 2px solid rgb(131, 58, 180);
   border-radius: 15px;
-  width: 60px;
-  height: 60px;
+  --size: 5rem;
+  width: var(--size);
+  height: var(--size);;
   transition: transform 0.2s;
   cursor: pointer;
 }
@@ -261,7 +268,7 @@ body .title {
 #guessButtonContainer .guess_Button:hover::after {
   content: "^";
   position: absolute;
-  bottom: -20px;
+  bottom: -3rem;
 }
 
 #announcement {
@@ -286,16 +293,20 @@ body .title {
   font-size: 16px;
 }
 
+:root {
+  --size: 20rem;
+  --zOffset: calc((var(--size) / 2) );
+}
+
 .diceContainer {
   -webkit-animation: stationary 3s infinite;
   animation: stationary 3s infinite;
-  position: relative;
-  margin-bottom: 80px;
+  /* position: relative; */
 }
 .diceContainer .dice {
-  position: relative;
-  width: 100px;
-  height: 100px;
+  /* position: relative; */
+  width: var(--size);
+  height: var(--size);;
   transform-style: preserve-3d;
   transform: rotateX(-45deg) rotateY(-45deg);
   transition: 1s ease;
@@ -332,29 +343,32 @@ body .title {
   height: 100%;
 }
 .diceContainer .dice .side1 {
-  transform: translateZ(50px);
+  transform: translateZ(var(--zOffset));
 }
 .diceContainer .dice .side6 {
-  transform: rotateX(180deg) translateZ(50px);
+  transform: rotateX(180deg) translateZ(var(--zOffset));
 }
 .diceContainer .dice .side2 {
-  transform: rotateX(90deg) translateZ(50px);
+  transform: rotateX(90deg) translateZ(var(--zOffset));
 }
 .diceContainer .dice .side5 {
-  transform: rotateX(-90deg) translateZ(50px);
+  transform: rotateX(-90deg) translateZ(var(--zOffset));
 }
 .diceContainer .dice .side3 {
-  transform: rotateY(-90deg) translateZ(50px);
+  transform: rotateY(-90deg) translateZ(var(--zOffset));
 }
 .diceContainer .dice .side4 {
-  transform: rotateY(90deg) translateZ(50px);
+  transform: rotateY(90deg) translateZ(var(--zOffset));
 }
 .diceContainer #emotes {
   position: absolute;
   top: -30px;
-  left: 32px;
-  width: 32px;
-  height: 32px;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  --size: 5rem;
+  width: var(--size);
+  height: var(--size);;
   z-index: 999;
   -webkit-animation: stationary 3s infinite;
   animation: stationary 3s infinite;
@@ -373,19 +387,25 @@ body .title {
   align-items: center;
   position: absolute;
   font-family: "TitleFont", sans-serif;
-  text-shadow: 2px 2px rgb(131, 58, 180);
+  font-size: 5rem;
+  text-shadow: 0.5rem 0.5rem rgb(131, 58, 180);
+  /* padding: 0 1rem; */
   top: 10rem;
-  width: 50vh;
+  width: 90%;
 }
 #hud #numberOfTries {
   width: auto;
-  height: 32px;
+  height: auto;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 #hud #numberOfTries img {
-  width: 26px;
-  height: 26px;
+  --size: 5rem;
+  image-rendering: pixelated;
+  padding-top: 1rem;
+  width: var(--size);
+  height: var(--size);
 }
 
 #winNumLog {
@@ -422,15 +442,18 @@ body .title {
   align-items: center;
   gap: 1rem;
 }
+#gameStart #gameStartMenu h1,
+button {
+  font-size: 4rem;
+  --text-shadow-pos: 0.4rem;
+  text-shadow: var(--text-shadow-pos) var(--text-shadow-pos) rgb(131, 58, 180);
+}
 #gameStart #gameStartMenu button {
   background: none;
   border: none;
-  text-shadow: 2px 2px rgb(131, 58, 180);
-  font-size: 1.5rem;
   font-family: "BodyFont", sans-serif;
   color: rgb(252, 176, 69);
-  text-shadow: 2px 2px rgb(131, 58, 180);
-  width: 200px;
+  width: 45%;
   height: auto;
   border: 2px solid rgb(131, 58, 180);
   z-index: 999;
@@ -448,17 +471,34 @@ body .title {
 #gameStart #gameStartMenu button span {
   font-family: "TitleFont", sans-serif;
 }
+#gameResults h1 {
+  --text-shadow-pos: 0.4rem;
+  text-shadow: var(--text-shadow-pos) var(--text-shadow-pos) rgb(131, 58, 180);
+}
+#gameResults h1 {
+  font-size: 5rem;
+}
+#gameResults h3 {
+  font-size: 3rem;
+}
 #gameResults .gameSummary {
   font-family: "BodyFont", sans-serif;
-  font-size: 0.8rem;
-  color: rgb(252, 176, 69);
-  text-shadow: 2px 2px rgb(131, 58, 180);
-  width: 300px;
+  font-size: 2rem;
+  color: rgb(252, 176, 69)
+  /* width: 300px; */
   height: auto;
   border: 2px dashed rgb(131, 58, 180);
   z-index: 999;
-  padding: 10px;
+  padding: 2rem;
   margin: 20px 0;
+}
+#gameResults .gameSummary p {
+  text-align: center;
+}
+#gameReults .gameSummary div:first-child {
+  margin-top: 0;
+  background: blue;
+  color: white;
 }
 #gameResults .gameSummary span::before {
   content: "* ";
@@ -467,7 +507,8 @@ body .title {
 #gameStart #gameStartMenu {
   font-family: "BodyFont", sans-serif;
   color: rgb(252, 176, 69);
-  text-shadow: 2px 2px rgb(131, 58, 180);
+  --text-shadow-pos: 0.25rem;
+  text-shadow: var(--text-shadow-pos) var(--text-shadow-pos) rgb(131, 58, 180);
   font-family: "TitleFont", sans-serif;
   display: flex;
   flex-direction: column;
@@ -492,7 +533,8 @@ body .title {
 #gameResults #gameRestart .gameRestartButtons button {
   font-family: "BodyFont", sans-serif;
   color: rgb(252, 176, 69);
-  text-shadow: 2px 2px rgb(131, 58, 180);
+  --text-shadow-pos: 0.25rem;
+  text-shadow: var(--text-shadow-pos) var(--text-shadow-pos) rgb(131, 58, 180);
   padding-top: 5px;
   border: none;
   background: none;
@@ -504,13 +546,13 @@ body .title {
 }
 @keyframes arrowAnimation {
   50% {
-    left: -15px;
+    left: -3rem;
   }
 }
 #gameResults #gameRestart .gameRestartButtons button:hover::before {
   content: ">";
   position: absolute;
-  left: -10px;
+  left: -4.2rem;
   -webkit-animation: arrowAnimation 0.5s infinite;
   animation: arrowAnimation 0.5s infinite;
 }

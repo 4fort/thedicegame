@@ -38,7 +38,7 @@ let guessNum;
 // STORAGE VARIABLE
 let diceSide; // WINNING NUMBER STORAGE
 let guessSide; // USER GUESS STORAGE
-let winLog = [];
+let winNumLog = [];
 let guessLog = [];
 let tries;
 let wins = 0;
@@ -115,7 +115,7 @@ const diceDisplay = () => {
   for (let i = 1; i <= 6; i++) {
     dice.innerHTML += `
             <div class="face side${i}">
-                <img src="assets/diceFaces/${i}.png" alt="">
+                <img src="assets/dice_faces/${i}.png" alt="">
             </div>
             `;
   }
@@ -308,6 +308,9 @@ keyGuideDisplay();
 
 // DISPLAY GAME RESTART DIALOGUE
 const gameResultsDisplay = (e) => {
+  const _test = guessLog.map((num, i) => winNumLog[i] === num);
+  console.log(_test);
+
   setTimeout(() => {
     gameResultsElement.style.display = "flex";
 
@@ -318,11 +321,20 @@ const gameResultsDisplay = (e) => {
               <div class="gameSummary">
                 <div class="gameResultPlayerGuesses">
                   <p>Your guesses</p>
-                  <span>${guessLog.join(" - ")}</span>
+                  ${guessLog
+                    .map((num, i) => {
+                      const isWin = winNumLog[i] === num;
+                      return `
+                      <span class="${isWin ? "win" : "lose"}">
+                        ${num}
+                      </span>
+                    `;
+                    })
+                    .join(" - ")}
                 </div>
                 <div class="gameResultWinningNumbers">
                   <p>Winning Numbers</p>
-                  <span>${winLog.join(" - ")}</span>
+                  <span>${winNumLog.join(" - ")}</span>
                 </div>
               </div>
               <div class="gameRestartButtons">
@@ -339,7 +351,7 @@ const gameResultsDisplay = (e) => {
                 </div>
                 <div class="gameResultWinningNumbers">
                   <p>Winning Sides</p>
-                  <span>${winLog.join(" - ")}</span>
+                  <span>${winNumLog.join(" - ")}</span>
                 </div>
               </div>
               <div class="gameRestartButtons">
@@ -519,8 +531,8 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
     keyID = 32;
 
     if (diceSide <= 6 && diceSide >= 1) {
-      winLog.push(diceSide);
-      winNumLogOutput.innerHTML = winLog.join(" - ");
+      winNumLog.push(diceSide);
+      winNumLogOutput.innerHTML = winNumLog.join(" - ");
     }
 
     showHud(tries !== 0);
@@ -549,7 +561,7 @@ const gameRestart = () => {
   guessLog = [];
   diceSide = 0;
   wins = 0;
-  winLog = [];
+  winNumLog = [];
 
   // setup();
 

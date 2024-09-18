@@ -501,7 +501,13 @@ button {
   color: white;
 }
 #gameResults .gameSummary span::before {
-  content: "* ";
+  /* content: "* "; */
+}
+#gameResults .gameSummary .lose {
+  opacity: .3;
+}
+#gameResults .gameSummary .win {
+  opacity: 1;
 }
 #gameResults #gameRestart,
 #gameStart #gameStartMenu {

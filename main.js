@@ -317,7 +317,7 @@ const gameResultsDisplay = (e) => {
     if (e) {
       gameRestartElement.innerHTML = `
               <h1>YOU WIN!</h1>
-              <h3>Claim your price from the operator</h3>
+              <h3>Claim your prize from the operator</h3>
               <div class="gameSummary">
                 <div class="gameResultPlayerGuesses">
                   <p>Your guesses</p>
@@ -342,12 +342,23 @@ const gameResultsDisplay = (e) => {
               </div>
               `;
     } else {
+      const guessIsPlural = qualifyingScore > 1 ? "es" : "";
       gameRestartElement.innerHTML = `
               <h1>YOU LOSE!</h1>
+              <h3>you need at least ${qualifyingScore} right guess${guessIsPlural} to win</h3>
               <div class="gameSummary">
                 <div class="gameResultPlayerGuesses">
                   <p>Your guesses</p>
-                  <span>${guessLog.join(" - ")}</span>
+                  ${guessLog
+                    .map((num, i) => {
+                      const isWin = winNumLog[i] === num;
+                      return `
+                      <span class="${isWin ? "win" : "lose"}">
+                        ${num}
+                      </span>
+                    `;
+                    })
+                    .join(" - ")}
                 </div>
                 <div class="gameResultWinningNumbers">
                   <p>Winning Sides</p>
@@ -520,6 +531,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
         correctOrNot.innerHTML = "You guessed right!";
         emoteDisplayWinOrLose(true);
       } else {
+        wrongGuessScreenDisplay();
         correctOrNot.innerHTML = "You guessed wrong!";
         emoteDisplayWinOrLose(false);
       }
@@ -672,6 +684,42 @@ const mutateDifficulty = (keyCode) => {
     }
   }
   localStorage.setItem("skibidi", difficultyPercentage);
+};
+
+const wrongGuessScreenDisplay = () => {
+  document.body.classList.add("wrong_guess");
+  const shakeValues = {
+    x: 20,
+    y: 0,
+  };
+  const keyFrames = [
+    {
+      transform: "translate(0, 0)",
+    },
+    {
+      transform: `translate(${shakeValues.x}px, ${shakeValues.y}px)`,
+    },
+    {
+      transform: `translate(-${shakeValues.x}px, ${shakeValues.y}px)`,
+    },
+    {
+      transform: `translate(${shakeValues.x}px, ${shakeValues.y}px)`,
+    },
+    {
+      transform: `translate(-${shakeValues.x}px, ${shakeValues.y}px)`,
+    },
+    {
+      transform: "translate(0, 0)",
+    },
+  ];
+
+  document.body.animate(keyFrames, {
+    duration: 500,
+  });
+
+  setTimeout(() => {
+    document.body.classList.remove("wrong_guess");
+  }, 1000);
 };
 
 // TO ADD

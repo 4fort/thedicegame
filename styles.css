@@ -20,136 +20,7 @@ body {
   color: white;
   overflow: hidden;
 }
-@-webkit-keyframes flicker {
-  0% {
-    opacity: 0.27861;
-  }
-  5% {
-    opacity: 0.34769;
-  }
-  10% {
-    opacity: 0.23604;
-  }
-  15% {
-    opacity: 0.90626;
-  }
-  20% {
-    opacity: 0.18128;
-  }
-  25% {
-    opacity: 0.83891;
-  }
-  30% {
-    opacity: 0.65583;
-  }
-  35% {
-    opacity: 0.67807;
-  }
-  40% {
-    opacity: 0.26559;
-  }
-  45% {
-    opacity: 0.84693;
-  }
-  50% {
-    opacity: 0.96019;
-  }
-  55% {
-    opacity: 0.08594;
-  }
-  60% {
-    opacity: 0.20313;
-  }
-  65% {
-    opacity: 0.71988;
-  }
-  70% {
-    opacity: 0.53455;
-  }
-  75% {
-    opacity: 0.37288;
-  }
-  80% {
-    opacity: 0.71428;
-  }
-  85% {
-    opacity: 0.70419;
-  }
-  90% {
-    opacity: 0.7003;
-  }
-  95% {
-    opacity: 0.36108;
-  }
-  100% {
-    opacity: 0.24387;
-  }
-}
-@keyframes flicker {
-  0% {
-    opacity: 0.27861;
-  }
-  5% {
-    opacity: 0.34769;
-  }
-  10% {
-    opacity: 0.23604;
-  }
-  15% {
-    opacity: 0.90626;
-  }
-  20% {
-    opacity: 0.18128;
-  }
-  25% {
-    opacity: 0.83891;
-  }
-  30% {
-    opacity: 0.65583;
-  }
-  35% {
-    opacity: 0.67807;
-  }
-  40% {
-    opacity: 0.26559;
-  }
-  45% {
-    opacity: 0.84693;
-  }
-  50% {
-    opacity: 0.96019;
-  }
-  55% {
-    opacity: 0.08594;
-  }
-  60% {
-    opacity: 0.20313;
-  }
-  65% {
-    opacity: 0.71988;
-  }
-  70% {
-    opacity: 0.53455;
-  }
-  75% {
-    opacity: 0.37288;
-  }
-  80% {
-    opacity: 0.71428;
-  }
-  85% {
-    opacity: 0.70419;
-  }
-  90% {
-    opacity: 0.7003;
-  }
-  95% {
-    opacity: 0.36108;
-  }
-  100% {
-    opacity: 0.24387;
-  }
-}
+
 body::before {
   content: "";
   position: absolute;
@@ -193,7 +64,9 @@ body .title {
   align-items: center;
   top: 0;
 }
-
+.wrong_guess::before {
+  background: radial-gradient(transparent 70%, rgba(255, 0, 0, 0.3));
+}
 #guessButtonContainer {
   position: absolute;
   bottom: 3rem;
@@ -211,28 +84,7 @@ body .title {
 #guessButtonContainer .guess_radio:checked ~ .guess_Button {
   border: 2px dashed rgb(252, 176, 69);
 }
-@-webkit-keyframes activeButton {
-  0% {
-    bottom: -3rem;
-  }
-  50% {
-    bottom: -3.3rem;
-  }
-  100% {
-    bottom: -3rem;
-  }
-}
-@keyframes activeButton {
-  0% {
-    bottom: -3rem;
-  }
-  50% {
-    bottom: -3.3rem;
-  }
-  100% {
-    bottom: -3rem;
-  }
-}
+
 #guessButtonContainer {
   display: flex;
   gap: 2rem;
@@ -251,14 +103,14 @@ body .title {
   font-family: "BodyFont", sans-serif;
   font-size: 2.5rem;
   color: rgb(252, 176, 69);
-  --text-shadow-pos: .3rem;
+  --text-shadow-pos: 0.3rem;
   text-shadow: var(--text-shadow-pos) var(--text-shadow-pos) rgb(131, 58, 180);
   background: none;
   border: 2px solid rgb(131, 58, 180);
   border-radius: 15px;
   --size: 5rem;
   width: var(--size);
-  height: var(--size);;
+  height: var(--size);
   transition: transform 0.2s;
   cursor: pointer;
 }
@@ -295,7 +147,7 @@ body .title {
 
 :root {
   --size: 20rem;
-  --zOffset: calc((var(--size) / 2) );
+  --zOffset: calc((var(--size) / 2));
 }
 
 .diceContainer {
@@ -306,32 +158,13 @@ body .title {
 .diceContainer .dice {
   /* position: relative; */
   width: var(--size);
-  height: var(--size);;
+  height: var(--size);
   transform-style: preserve-3d;
   transform: rotateX(-45deg) rotateY(-45deg);
   transition: 1s ease;
   cursor: pointer;
 }
-@-webkit-keyframes rolling {
-  50% {
-    transform: rotateX(500deg) rotateY(500deg);
-  }
-}
-@keyframes rolling {
-  50% {
-    transform: rotateX(500deg) rotateY(500deg);
-  }
-}
-@-webkit-keyframes stationary {
-  50% {
-    transform: translateY(15px);
-  }
-}
-@keyframes stationary {
-  50% {
-    transform: translateY(15px);
-  }
-}
+
 .diceContainer .dice .face {
   position: absolute;
   width: 100%;
@@ -368,7 +201,7 @@ body .title {
   margin-inline: auto;
   --size: 5rem;
   width: var(--size);
-  height: var(--size);;
+  height: var(--size);
   z-index: 999;
   -webkit-animation: stationary 3s infinite;
   animation: stationary 3s infinite;
@@ -484,13 +317,14 @@ button {
 #gameResults .gameSummary {
   font-family: "BodyFont", sans-serif;
   font-size: 2rem;
-  color: rgb(252, 176, 69)
+  color: rgb(252, 176, 69);
   /* width: 300px; */
   height: auto;
   border: 2px dashed rgb(131, 58, 180);
   z-index: 999;
   padding: 2rem;
   margin: 20px 0;
+  text-align: center;
 }
 #gameResults .gameSummary p {
   text-align: center;
@@ -504,7 +338,7 @@ button {
   /* content: "* "; */
 }
 #gameResults .gameSummary .lose {
-  opacity: .3;
+  opacity: 0.3;
 }
 #gameResults .gameSummary .win {
   opacity: 1;
@@ -545,16 +379,7 @@ button {
   border: none;
   background: none;
 }
-@-webkit-keyframes arrowAnimation {
-  50% {
-    left: -15px;
-  }
-}
-@keyframes arrowAnimation {
-  50% {
-    left: -3rem;
-  }
-}
+
 #gameResults #gameRestart .gameRestartButtons button:hover::before {
   content: ">";
   position: absolute;
@@ -590,17 +415,6 @@ button {
   padding: 5px 10px;
 }
 
-@-webkit-keyframes perfectSyempre {
-  50% {
-    transform: scale(1.1);
-  }
-}
-
-@keyframes perfectSyempre {
-  50% {
-    transform: scale(1.1);
-  }
-}
 .perfectKoSir_omsim {
   text-align: center;
   -webkit-animation: perfectSyempre 0.5s infinite;
@@ -650,11 +464,7 @@ button {
   width: 100%;
   height: 100%;
 }
-@keyframes touchGuideAnimation {
-  50% {
-    transform: translate(-5px, -5px);
-  }
-}
+
 #touchGuide {
   display: block;
   height: 32px;

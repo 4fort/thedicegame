@@ -21,7 +21,7 @@ const checkboardTableElement = document.getElementById("checkboardTable");
 const GAME_METADATA = {
   major: 1,
   minor: 3,
-  patch: 3,
+  patch: 5,
   stage: "",
 };
 
@@ -516,7 +516,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
 
   let containerKeyframes = [
     { transform: `scale(1)` },
-    { transform: `scale(.7)` },
+    { transform: `scale(.6)` },
     { transform: `scale(1)` },
   ];
   diceContainer.animate(containerKeyframes, {

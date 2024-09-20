@@ -535,6 +535,7 @@ button {
 }
 #checkboardTable #checkboard .win {
   color: rgb(252, 176, 69);
+  background-color: rgba(252, 176, 69, 0.2);
 }
 /* #checkboard {
   position: absolute;

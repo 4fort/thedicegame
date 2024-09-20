@@ -528,6 +528,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   setTimeout(() => {
     if (!isRestart) {
       if (diceSide === guessSide) {
+        rightGuessDisplay();
         correctOrNot.innerHTML = "You guessed right!";
         emoteDisplayWinOrLose(true);
       } else {
@@ -686,10 +687,26 @@ const mutateDifficulty = (keyCode) => {
   localStorage.setItem("skibidi", difficultyPercentage);
 };
 
+const rightGuessDisplay = () => {
+  let isAdd = true;
+  const interval = setInterval(() => {
+    if (isAdd) {
+      document.body.classList.add("right_guess");
+      isAdd = !isAdd;
+    } else {
+      document.body.classList.remove("right_guess");
+      isAdd = !isAdd;
+    }
+  }, 100);
+  setTimeout(() => {
+    document.body.classList.remove("right_guess");
+    clearInterval(interval);
+  }, 1000);
+};
 const wrongGuessScreenDisplay = () => {
   document.body.classList.add("wrong_guess");
   const shakeValues = {
-    x: 20,
+    x: 10,
     y: 0,
   };
   const keyFrames = [

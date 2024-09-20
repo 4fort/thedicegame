@@ -64,6 +64,9 @@ body .title {
   align-items: center;
   top: 0;
 }
+.right_guess::before {
+  background: radial-gradient(transparent 70%, rgba(246, 224, 94, 0.3));
+}
 .wrong_guess::before {
   background: radial-gradient(transparent 70%, rgba(255, 0, 0, 0.3));
 }

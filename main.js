@@ -13,6 +13,7 @@ const dice = document.querySelector(".dice");
 const gameDebugElement = document.getElementById("gameDebug");
 const gameVersionElement = document.getElementById("gameVersion");
 const gameStartElement = document.getElementById("gameStart");
+const checkboardElement = document.getElementById("checkboard");
 
 const GAME_VERSION = "0.2.8";
 
@@ -550,6 +551,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
 
     showHud(tries !== 0);
     showScore();
+    displayCheckboard(diceSide === guessSide);
   }, globalDelay);
 };
 
@@ -597,6 +599,8 @@ const gameRestart = () => {
   // dice.style.pointerEvents = "all";
 
   gameResultsElement.style.display = "none";
+
+  checkboardElement.innerHTML = "";
 
   gameModeSelect();
 };
@@ -737,6 +741,13 @@ const wrongGuessScreenDisplay = () => {
   setTimeout(() => {
     document.body.classList.remove("wrong_guess");
   }, 1000);
+};
+
+const displayCheckboard = (isWin) => {
+  if (isWin)
+    checkboardElement.innerHTML += `<tr class="win"><td>${diceSide}</td><td>${guessSide}</td><td>✓</td></tr>`;
+  else
+    checkboardElement.innerHTML += `<tr><td>${diceSide}</td><td>${guessSide}</td><td>✗</td></tr>`;
 };
 
 // TO ADD

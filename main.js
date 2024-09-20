@@ -20,7 +20,7 @@ const checkboardElement = document.getElementById("checkboard");
 const GAME_METADATA = {
   major: 1,
   minor: 1,
-  patch: 0,
+  patch: 1,
   stage: "",
 };
 
@@ -526,7 +526,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
 
   let bodyKeyframes = [
     { transform: `scale(1)` },
-    { transform: `scale(1.1)` },
+    { transform: `scale(1.05)` },
     { transform: `scale(1)` },
   ];
   document.body.animate(bodyKeyframes, {
@@ -536,18 +536,20 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   });
 
   let hudKeyframes = [
-    { transform: `scale(1)` },
-    { transform: `scale(1.3)` },
-    { transform: `scale(1)` },
+    { transform: `scale(1)`, filter: "blur(0px)" },
+    { transform: `scale(1.2)`, filter: "blur(7px)" },
+    { transform: `scale(1)`, filter: "blur(0px)" },
   ];
   hudContainerElement.animate(hudKeyframes, {
-    duration: 3800,
+    duration: globalDelay,
     easing: "cubic-bezier(0.000, 1.000, 1.000, 0.000)",
     fill: "forwards",
   });
-
-  hudContainerElement.style.filter = "blur(5px)";
-  document.querySelector(".title").style.filter = "blur(5px)";
+  document.querySelector(".title").animate(hudKeyframes, {
+    duration: globalDelay,
+    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.000)",
+    fill: "forwards",
+  });
 
   // dice.style.pointerEvents = "none";
   // guessButtonsContainer.style.display = "none";
@@ -595,8 +597,6 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
 
     showScore();
     displayCheckboard(diceSide === guessSide);
-    hudContainerElement.style.filter = "blur(0px)";
-    document.querySelector(".title").style.filter = "blur(0px)";
   }, globalDelay);
 };
 

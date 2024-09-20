@@ -606,6 +606,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
       showHud(false);
       gameResultsDisplay(true);
       emoteDisplayWinOrLose(true);
+      screenFlashWin(true);
     } else if (wins < qualifyingScore - tries) {
       showHud(false);
       gameResultsDisplay(false);
@@ -663,6 +664,8 @@ const gameRestart = () => {
   gameResultsElement.style.display = "none";
 
   checkboardElement.innerHTML = "";
+
+  screenFlashWin(false);
 
   gameModeSelect();
 };
@@ -753,6 +756,36 @@ const mutateDifficulty = (keyCode) => {
   localStorage.setItem("skibidi", difficultyPercentage);
 };
 
+const screenFlashWin = (() => {
+  let interval = null;
+
+  return (isShow) => {
+    if (isShow) {
+      let isAdd = true;
+
+      if (!interval) {
+        interval = setInterval(() => {
+          if (isAdd) {
+            document.body.classList.add("right_guess");
+          } else {
+            document.body.classList.remove("right_guess");
+          }
+          isAdd = !isAdd;
+        }, 150);
+      }
+      screenShake(0, 3, Infinity);
+    } else {
+      // Clear the interval and stop the flashing effect
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+      screenShake(0, 0, 0);
+      document.body.classList.remove("right_guess");
+    }
+  };
+})();
+
 const rightGuessDisplay = () => {
   let isAdd = true;
   const interval = setInterval(() => {
@@ -764,7 +797,7 @@ const rightGuessDisplay = () => {
       isAdd = !isAdd;
     }
   }, 100);
-  screenShake(0, 10);
+  screenShake(0, 10, 1);
   setTimeout(() => {
     document.body.classList.remove("right_guess");
     clearInterval(interval);
@@ -772,42 +805,44 @@ const rightGuessDisplay = () => {
 };
 const wrongGuessScreenDisplay = () => {
   document.body.classList.add("wrong_guess");
-  screenShake(10, 0);
+  screenShake(10, 0, 1);
   setTimeout(() => {
     document.body.classList.remove("wrong_guess");
   }, 1000);
 };
 
-const screenShake = (x, y) => {
-  const shakeValues = {
-    x,
-    y,
-  };
-  const keyFrames = [
-    {
-      transform: "translate(0, 0)",
-    },
-    {
-      transform: `translate(${shakeValues.x}px, ${shakeValues.y}px)`,
-    },
-    {
-      transform: `translate(-${shakeValues.x}px, -${shakeValues.y}px)`,
-    },
-    {
-      transform: `translate(${shakeValues.x}px, ${shakeValues.y}px)`,
-    },
-    {
-      transform: `translate(-${shakeValues.x}px, -${shakeValues.y}px)`,
-    },
-    {
-      transform: "translate(0, 0)",
-    },
-  ];
+const screenShake = (() => {
+  let currentAnimation = null; // Track the animation instance
 
-  document.body.animate(keyFrames, {
-    duration: 500,
-  });
-};
+  return (x, y, repeatitions) => {
+    // If repeatitions is 0, stop any running animation
+    if (repeatitions === 0 && currentAnimation) {
+      currentAnimation.cancel(); // Stop the animation
+      currentAnimation = null; // Reset the animation instance
+      return;
+    }
+
+    const shakeValues = {
+      x,
+      y,
+    };
+
+    const keyFrames = [
+      { transform: "translate(0, 0)" },
+      { transform: `translate(${shakeValues.x}px, ${shakeValues.y}px)` },
+      { transform: `translate(-${shakeValues.x}px, -${shakeValues.y}px)` },
+      { transform: `translate(${shakeValues.x}px, ${shakeValues.y}px)` },
+      { transform: `translate(-${shakeValues.x}px, -${shakeValues.y}px)` },
+      { transform: "translate(0, 0)" },
+    ];
+
+    // Create the animation
+    currentAnimation = document.body.animate(keyFrames, {
+      duration: 500,
+      iterations: repeatitions,
+    });
+  };
+})();
 
 const displayCheckboard = (isWin) => {
   if (isWin)

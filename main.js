@@ -555,6 +555,10 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
       showHud(false);
       gameResultsDisplay(true);
       emoteDisplayWinOrLose(true);
+    } else if (wins < qualifyingScore - tries) {
+      showHud(false);
+      gameResultsDisplay(false);
+      emoteDisplayWinOrLose(false);
     }
 
     showScore();

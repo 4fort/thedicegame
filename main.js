@@ -10,6 +10,7 @@ const keyGuideElement = document.getElementById("keyGuide");
 const touchGuideElement = document.getElementById("touchGuide");
 const guessButtonsContainer = document.getElementById("guessButtonContainer");
 const dice = document.querySelector(".dice");
+const diceContainer = document.querySelector(".diceContainer");
 const gameDebugElement = document.getElementById("gameDebug");
 const gameVersionElement = document.getElementById("gameVersion");
 const gameStartElement = document.getElementById("gameStart");
@@ -462,8 +463,6 @@ const diceRoll = () => {
 const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   showHud(false);
 
-  let animationDoneTimeout;
-
   keyID = undefined;
   clearTimeout(emoteWinLoseID);
 
@@ -502,18 +501,22 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
       keyFrames.push({ transform: "rotateX(-45deg) rotateY(-45deg)" });
       break;
   }
-
-  //   dice.style.animation = "rolling 4s";
-  //   dice.style.transform = "rotateX(500deg) rotateY(500deg)";
-  //   dice.style.transition = "transform 4s";
-
-  //   console.log(`keyFrames: ${keyFrames}`);
   dice.animate(keyFrames, {
     duration: 4000,
     easing: "ease-out",
     fill: "forwards",
   });
 
+  let containerKeyframes = [
+    { transform: `scale(1)` },
+    { transform: `scale(0.7)` },
+    { transform: `scale(1)` },
+  ];
+  diceContainer.animate(containerKeyframes, {
+    duration: 4000,
+    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.015)",
+    fill: "forwards",
+  });
   // dice.style.pointerEvents = "none";
   // guessButtonsContainer.style.display = "none";
 

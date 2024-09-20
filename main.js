@@ -16,7 +16,7 @@ const gameVersionElement = document.getElementById("gameVersion");
 const gameStartElement = document.getElementById("gameStart");
 const checkboardElement = document.getElementById("checkboard");
 
-const GAME_VERSION = "0.2.8";
+const GAME_VERSION = "0.3.2";
 
 // GAME CONSTANTS
 const GAME_1_VALUES = {

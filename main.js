@@ -16,7 +16,12 @@ const gameVersionElement = document.getElementById("gameVersion");
 const gameStartElement = document.getElementById("gameStart");
 const checkboardElement = document.getElementById("checkboard");
 
-const GAME_VERSION = "0.3.2";
+const GAME_METADATA = {
+  major: 1,
+  minor: 0,
+  patch: 1,
+  stage: "",
+};
 
 // GAME CONSTANTS
 const GAME_1_VALUES = {
@@ -108,7 +113,7 @@ const setup = ({ TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
   console.log("difficultyPercentage: ", difficultyPercentage);
 };
 
-gameVersionElement.innerText = `v${GAME_VERSION}a © Fort`;
+gameVersionElement.innerText = `v${GAME_METADATA.major}.${GAME_METADATA.minor}.${GAME_METADATA.patch}${GAME_METADATA.stage} © Fort`;
 
 // ################## GENERATOR / DISPLAY ELEMENTS ##################
 

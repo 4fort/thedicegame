@@ -546,7 +546,14 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
       // winNumLogOutput.innerHTML = winNumLog.join(" - ");
     }
 
-    showHud(tries !== 0);
+    if (tries !== 0) showHud(true);
+
+    if (wins === qualifyingScore) {
+      showHud(false);
+      gameResultsDisplay(true);
+      emoteDisplayWinOrLose(true);
+    }
+
     showScore();
     displayCheckboard(diceSide === guessSide);
   }, globalDelay);

@@ -20,7 +20,7 @@ const checkboardElement = document.getElementById("checkboard");
 const GAME_METADATA = {
   major: 1,
   minor: 1,
-  patch: 1,
+  patch: 2,
   stage: "",
 };
 

@@ -17,6 +17,7 @@ const gameVersionElement = document.getElementById("gameVersion");
 const gameStartElement = document.getElementById("gameStart");
 const checkboardElement = document.getElementById("checkboard");
 const checkboardTableElement = document.getElementById("checkboardTable");
+const blackBarsElement = document.getElementById("blackBars");
 
 const GAME_METADATA = {
   major: 1,
@@ -467,6 +468,9 @@ const diceRoll = () => {
   }
 };
 
+const rollingDiceElementsAnimationEasing =
+  "cubic-bezier(0.000, 1.000, 1.000, 0.000)";
+
 const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   showHud(false);
 
@@ -521,7 +525,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   ];
   diceContainer.animate(containerKeyframes, {
     duration: globalDelay - 50,
-    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.000)",
+    easing: rollingDiceElementsAnimationEasing,
     fill: "forwards",
   });
 
@@ -532,7 +536,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   ];
   document.body.animate(bodyKeyframes, {
     duration: 3800,
-    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.000)",
+    easing: rollingDiceElementsAnimationEasing,
     fill: "forwards",
   });
 
@@ -543,12 +547,12 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   ];
   hudContainerElement.animate(hudKeyframes, {
     duration: globalDelay,
-    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.000)",
+    easing: rollingDiceElementsAnimationEasing,
     fill: "forwards",
   });
   document.querySelector(".title").animate(hudKeyframes, {
     duration: globalDelay,
-    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.000)",
+    easing: rollingDiceElementsAnimationEasing,
     fill: "forwards",
   });
 
@@ -559,7 +563,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   ];
   checkboardTableElement.animate(checkboardTableKeyframes, {
     duration: globalDelay,
-    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.000)",
+    easing: rollingDiceElementsAnimationEasing,
     fill: "forwards",
   });
 
@@ -571,6 +575,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   guessButtonsDisplay();
 
   // guideControlsElement.style.display = "none";
+  showBlackBars();
 
   setTimeout(() => {
     if (!isRestart) {
@@ -809,6 +814,19 @@ const displayCheckboard = (isWin) => {
     checkboardElement.innerHTML += `<tr class="win"><td>${diceSide}</td><td>${guessSide}</td><td>✓</td></tr>`;
   else
     checkboardElement.innerHTML += `<tr><td>${diceSide}</td><td>${guessSide}</td><td>✗</td></tr>`;
+};
+
+const showBlackBars = () => {
+  const keyFrames = [
+    { transform: "scale(1.5)" },
+    { transform: "scale(1)" },
+    { transform: "scale(1.5)" },
+  ];
+
+  blackBarsElement.animate(keyFrames, {
+    duration: globalDelay,
+    easing: rollingDiceElementsAnimationEasing,
+  });
 };
 
 // TO ADD

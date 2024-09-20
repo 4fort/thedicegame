@@ -537,14 +537,22 @@ button {
   color: rgb(252, 176, 69);
   background-color: rgba(252, 176, 69, 0.2);
 }
-/* #checkboard {
+#blackBars {
   position: absolute;
-  left: 0;
-  top: 150px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  inset: 0;
+  z-index: 99999;
+  transform: scale(1.5);
   pointer-events: none;
-  font-size: 3rem;
-} */
+}
+#blackBars .bar {
+  position: absolute;
+  width: 100%;
+  height: 10rem;
+  background-color: black;
+}
+#blackBars .bar:first-child {
+  top: 0;
+}
+#blackBars .bar:last-child {
+  bottom: 0;
+}

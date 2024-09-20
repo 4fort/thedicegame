@@ -1,3 +1,5 @@
+import { GameRecord } from "./game_record.js";
+
 const correctOrNot = document.getElementById("guessCorrectOrNot");
 const hudContainerElement = document.getElementById("hud");
 const hud_numberOfTries = document.getElementById("numberOfTries");
@@ -20,18 +22,20 @@ const checkboardTableElement = document.getElementById("checkboardTable");
 
 const GAME_METADATA = {
   major: 1,
-  minor: 3,
-  patch: 5,
+  minor: 4,
+  patch: 0,
   stage: "",
 };
 
 // GAME CONSTANTS
 const GAME_1_VALUES = {
+  MODE: 1,
   TURNS_PER_GAME: 5,
   PASSING_SCORE: 1,
   DEFAULT_DIFFICULTY: 0.1,
 };
 const GAME_2_VALUES = {
+  MODDE: 2,
   TURNS_PER_GAME: 7,
   PASSING_SCORE: 3,
   DEFAULT_DIFFICULTY: 0.5,
@@ -58,6 +62,23 @@ let gameEndingDelay = 1500;
 let timesPlayed = 0;
 let itsMorhpingTime = 3;
 let difficultyPercentage;
+
+let GAME_RECORD;
+let GAME_OVERALL_RECORD;
+
+document.getElementById("game1").addEventListener("click", () => {
+  gameModeSelect("game1");
+});
+document.getElementById("game2").addEventListener("click", () => {
+  gameModeSelect("game2");
+});
+dice.addEventListener("click", () => {
+  diceRoll();
+});
+guessButtonsContainer.addEventListener("click", (event) => {
+  console.log(event.dataset.value);
+  // guessButtonValue(event.target);
+});
 
 const showHud = (isShown) => {
   // console.log(isShown);
@@ -88,7 +109,7 @@ const gameModeSelect = (mode) => {
 };
 gameModeSelect();
 
-const setup = ({ TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
+const setup = ({ MODE, TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
   tries = TURNS_PER_GAME;
   qualifyingScore = PASSING_SCORE;
 
@@ -111,6 +132,9 @@ const setup = ({ TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
   gameStartElement.style.display = "none";
 
   showHud(true);
+
+  GAME_RECORD = new GameRecord(`GAME_${MODE}_RECORD`);
+  GAME_OVERALL_RECORD = new GameRecord("GAME_OVERALL_RECORD");
 
   console.log("difficultyPercentage: ", difficultyPercentage);
 };
@@ -282,8 +306,8 @@ const guessButtonsDisplay = () => {
   guessButtonsContainer.innerHTML = "";
   for (let i = 1; i <= 6; i++) {
     guessButtonsContainer.innerHTML += `
-        <div>
-            <input type="radio" name="guess_nums" value="${i}" onclick="guessButtonValue(this)" class="guess_radio" id="guessButton${i}">
+        <div data-value=${i}>
+            <input type="radio" name="guess_nums" value="${i}" class="guess_radio" id="guessButton${i}">
             <label class="guess_Button" for="guessButton${i}">${i}</label>
         </div>
         `;
@@ -578,10 +602,16 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
         rightGuessDisplay();
         correctOrNot.innerHTML = "You guessed right!";
         emoteDisplayWinOrLose(true);
+
+        GAME_RECORD.addWin();
+        GAME_OVERALL_RECORD.addWin();
       } else {
         wrongGuessScreenDisplay();
         correctOrNot.innerHTML = "You guessed wrong!";
         emoteDisplayWinOrLose(false);
+
+        GAME_RECORD.addLoss();
+        GAME_OVERALL_RECORD.addLoss();
       }
     } else {
       correctOrNot.innerHTML = "Ready to play again?";

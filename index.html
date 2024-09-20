@@ -32,11 +32,11 @@
       <div id="gameStartMenu">
         <h1>Select Game Mode</h1>
         <div id="gameStartButtons">
-          <button id="game1" onclick="gameModeSelect('game1')">
+          <button id="game1">
             <h2>5</h2>
             rolls,<span> 1 </span>to score
           </button>
-          <button id="game2" onclick="gameModeSelect('game2')">
+          <button id="game2">
             <h2>7</h2>
             rolls,<span> 3 </span>to score
           </button>
@@ -65,7 +65,7 @@
 
     <div class="diceContainer">
       <div id="emotes"></div>
-      <div class="dice" onclick="diceRoll()"></div>
+      <div class="dice"></div>
     </div>
 
     <h1 id="guessCorrectOrNot"></h1>
@@ -83,5 +83,5 @@
     <div id="gameDebug"></div>
     <div id="gameVersion" />
   </body>
-  <script src="main.js"></script>
+  <script type="module" src="main.js"></script>
 </html>

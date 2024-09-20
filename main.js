@@ -309,9 +309,6 @@ keyGuideDisplay();
 
 // DISPLAY GAME RESTART DIALOGUE
 const gameResultsDisplay = (e) => {
-  const _test = guessLog.map((num, i) => winNumLog[i] === num);
-  console.log(_test);
-
   setTimeout(() => {
     gameResultsElement.style.display = "flex";
 
@@ -424,7 +421,7 @@ const diceRoll = () => {
 
     // PUSHES USER GUESSES TO AN ARRAY AND DISPLAYS IT
     guessLog.push(guessNum);
-    guessLogOutput.innerHTML = guessLog.join(" - ");
+    // guessLogOutput.innerHTML = guessLog.join(" - ");
 
     // STORES A NUMBER FROM LAST TURN NUMBERS. BECAUSE THE WINNUM IS PREDEFINED BEFORE THE GAME EVEN STARTED
     diceSide = winNum;
@@ -546,7 +543,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
 
     if (diceSide <= 6 && diceSide >= 1) {
       winNumLog.push(diceSide);
-      winNumLogOutput.innerHTML = winNumLog.join(" - ");
+      // winNumLogOutput.innerHTML = winNumLog.join(" - ");
     }
 
     showHud(tries !== 0);

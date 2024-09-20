@@ -1,4 +1,5 @@
 const correctOrNot = document.getElementById("guessCorrectOrNot");
+const hudContainerElement = document.getElementById("hud");
 const hud_numberOfTries = document.getElementById("numberOfTries");
 const hud_score = document.getElementById("score");
 const winNumLogOutput = document.getElementById("winNumLog");
@@ -18,8 +19,8 @@ const checkboardElement = document.getElementById("checkboard");
 
 const GAME_METADATA = {
   major: 1,
-  minor: 0,
-  patch: 1,
+  minor: 1,
+  patch: 0,
   stage: "",
 };
 
@@ -507,21 +508,47 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
       break;
   }
   dice.animate(keyFrames, {
-    duration: 4000,
+    duration: globalDelay - 50,
     easing: "ease-out",
     fill: "forwards",
   });
 
   let containerKeyframes = [
     { transform: `scale(1)` },
-    { transform: `scale(0.7)` },
+    { transform: `scale(.7)` },
     { transform: `scale(1)` },
   ];
   diceContainer.animate(containerKeyframes, {
-    duration: 4000,
-    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.015)",
+    duration: globalDelay - 50,
+    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.000)",
     fill: "forwards",
   });
+
+  let bodyKeyframes = [
+    { transform: `scale(1)` },
+    { transform: `scale(1.1)` },
+    { transform: `scale(1)` },
+  ];
+  document.body.animate(bodyKeyframes, {
+    duration: 3800,
+    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.000)",
+    fill: "forwards",
+  });
+
+  let hudKeyframes = [
+    { transform: `scale(1)` },
+    { transform: `scale(1.3)` },
+    { transform: `scale(1)` },
+  ];
+  hudContainerElement.animate(hudKeyframes, {
+    duration: 3800,
+    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.000)",
+    fill: "forwards",
+  });
+
+  hudContainerElement.style.filter = "blur(5px)";
+  document.querySelector(".title").style.filter = "blur(5px)";
+
   // dice.style.pointerEvents = "none";
   // guessButtonsContainer.style.display = "none";
 
@@ -568,6 +595,8 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
 
     showScore();
     displayCheckboard(diceSide === guessSide);
+    hudContainerElement.style.filter = "blur(0px)";
+    document.querySelector(".title").style.filter = "blur(0px)";
   }, globalDelay);
 };
 

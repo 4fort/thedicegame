@@ -266,6 +266,7 @@ body .title {
   background: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
+  backdrop-filter: blur(10px);
 }
 #gameResults,
 #gameStart {

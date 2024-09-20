@@ -519,6 +519,7 @@ button {
   top: 150px;
   pointer-events: none;
   font-size: 2rem;
+  transform-origin: right;
 }
 #checkboardTable th,
 #checkboardTable td {

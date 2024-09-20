@@ -16,11 +16,12 @@ const gameDebugElement = document.getElementById("gameDebug");
 const gameVersionElement = document.getElementById("gameVersion");
 const gameStartElement = document.getElementById("gameStart");
 const checkboardElement = document.getElementById("checkboard");
+const checkboardTableElement = document.getElementById("checkboardTable");
 
 const GAME_METADATA = {
   major: 1,
-  minor: 1,
-  patch: 2,
+  minor: 3,
+  patch: 3,
   stage: "",
 };
 
@@ -551,6 +552,17 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
     fill: "forwards",
   });
 
+  let checkboardTableKeyframes = [
+    { transform: `scale(1)` },
+    { transform: `scale(1.1)` },
+    { transform: `scale(1)` },
+  ];
+  checkboardTableElement.animate(checkboardTableKeyframes, {
+    duration: globalDelay,
+    easing: "cubic-bezier(0.000, 1.000, 1.000, 0.000)",
+    fill: "forwards",
+  });
+
   // dice.style.pointerEvents = "none";
   // guessButtonsContainer.style.display = "none";
 
@@ -747,6 +759,7 @@ const rightGuessDisplay = () => {
       isAdd = !isAdd;
     }
   }, 100);
+  screenShake(0, 10);
   setTimeout(() => {
     document.body.classList.remove("right_guess");
     clearInterval(interval);
@@ -754,9 +767,16 @@ const rightGuessDisplay = () => {
 };
 const wrongGuessScreenDisplay = () => {
   document.body.classList.add("wrong_guess");
+  screenShake(10, 0);
+  setTimeout(() => {
+    document.body.classList.remove("wrong_guess");
+  }, 1000);
+};
+
+const screenShake = (x, y) => {
   const shakeValues = {
-    x: 10,
-    y: 0,
+    x,
+    y,
   };
   const keyFrames = [
     {
@@ -766,13 +786,13 @@ const wrongGuessScreenDisplay = () => {
       transform: `translate(${shakeValues.x}px, ${shakeValues.y}px)`,
     },
     {
-      transform: `translate(-${shakeValues.x}px, ${shakeValues.y}px)`,
+      transform: `translate(-${shakeValues.x}px, -${shakeValues.y}px)`,
     },
     {
       transform: `translate(${shakeValues.x}px, ${shakeValues.y}px)`,
     },
     {
-      transform: `translate(-${shakeValues.x}px, ${shakeValues.y}px)`,
+      transform: `translate(-${shakeValues.x}px, -${shakeValues.y}px)`,
     },
     {
       transform: "translate(0, 0)",
@@ -782,10 +802,6 @@ const wrongGuessScreenDisplay = () => {
   document.body.animate(keyFrames, {
     duration: 500,
   });
-
-  setTimeout(() => {
-    document.body.classList.remove("wrong_guess");
-  }, 1000);
 };
 
 const displayCheckboard = (isWin) => {

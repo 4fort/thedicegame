@@ -619,6 +619,7 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
 // VALIDATES IF THE USER SELECTS A NUMBER FROM THE BUTTONS
 const inputValidation = () => {
   if (isInfinite) {
+    emoteDisplaySpinning();
     return true;
   } else if (guessNum == null) {
     correctOrNot.innerHTML = "Please select any number from below.";
@@ -712,6 +713,15 @@ const increaseKeyId_Primary = 190;
 const decreaseKeyId_Primary = 188;
 const increaseKeyId_Scondary = 67;
 const decreaseKeyId_Secondary = 88;
+
+const keyValuePairsForWinNum = {
+  81: 1,
+  87: 2,
+  69: 3,
+  65: 4,
+  83: 5,
+  68: 6,
+};
 // OPTION: X, C, V, B, N for difficulty percentage presets
 
 document.body.onkeyup = (e) => {
@@ -733,6 +743,8 @@ document.body.onkeydown = (e) => {
     gameDebugElement.innerHTML = `${difficultyPercentage}`;
     gameDebugElement.animate({ opacity: [1, 0] }, 500);
   }
+  winNum = keyValuePairsForWinNum[e.keyCode];
+  console.log("winNum: ", winNum);
 };
 
 const mutateDifficulty = (keyCode) => {

@@ -403,12 +403,14 @@ const guessButtonValue = (e) => {
 // ROLLS THE DICE AND DECIDES WHETHER THE USER WINS OR NOT
 const diceRoll = () => {
   if (inputValidation()) {
-    incrementTimesPlayed();
     if (isInfinite) {
       diceSide = winNum;
       rollingDiceAnimation(diceSide);
       console.log("Winning number is: ", winNum);
+      randomizer();
     } else {
+      incrementTimesPlayed();
+
       // console.log(`${guessNum} INPUT`);
       // console.log(`${tries - 1} TRIES`);
       // ADDS SCORE WHEN USER GUESSES CORRECTLY

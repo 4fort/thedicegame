@@ -524,6 +524,29 @@ button {
   font-size: 2rem;
   transform-origin: right;
 }
+#checkboardTable.infinite {
+  position: static;
+  pointer-events: all;
+}
+#checkboardtable.infinite thead {
+  width: calc(100% - 1em);
+}
+#checkboardTable.infinite tbody {
+  display: block;
+  height: 60vh;
+  overflow-y: scroll;
+}
+#checkboardTable.infinite tr {
+  display: block ruby;
+  text-align: center;
+  width: 100%;
+}
+#checkboardTable.infinite #checkboard tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+#checkboardTable.infinite #checkboard tr:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
 #checkboardTable th,
 #checkboardTable td {
   padding: 5px;

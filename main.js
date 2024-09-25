@@ -17,6 +17,9 @@ const gameVersionElement = document.getElementById("gameVersion");
 const gameStartElement = document.getElementById("gameStart");
 const checkboardElement = document.getElementById("checkboard");
 const checkboardTableElement = document.getElementById("checkboardTable");
+const checkboardTableHeadElement = document.getElementById(
+  "checkboardTableHead"
+);
 const blackBarsElement = document.getElementById("blackBars");
 
 const GAME_METADATA = {
@@ -123,14 +126,20 @@ const setup = ({ TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
 
   if (PASSING_SCORE === 9999 && TURNS_PER_GAME === 9999) {
     isInfinite = true;
-    checkboardTableElement.innerHTML = `
-      <thead>
+    checkboardTableElement.classList.add("infinite");
+    checkboardTableHeadElement.innerHTML = `
+      <tr>
         <th>Recent Dice Sides</th>
-      </thead>
-      <tbody id="checkboard">
-      </tbody>
+      </tr>
     `;
     guessButtonsDisplay();
+  } else {
+    checkboardTableHeadElement.innerHTML = `
+      <tr>
+        <th>Dice sides</th>
+        <th>Guesses</th>
+      </tr>
+    `;
   }
   showHud(true);
   showScore();
@@ -840,7 +849,7 @@ const screenShake = (() => {
 const displayCheckboard = (isWin) => {
   if (isInfinite) {
     console.log("HERE:", checkboardElement);
-    checkboardElement.innerHTML += `<tr><td>${diceSide}</td><td>${guessSide}</td><td>✗</td></tr>`;
+    checkboardElement.innerHTML += `<tr><td>${diceSide}</td></tr>`;
   } else {
     if (isWin)
       checkboardElement.innerHTML += `<tr class="win"><td>${diceSide}</td><td>${guessSide}</td><td>✓</td></tr>`;

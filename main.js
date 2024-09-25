@@ -743,7 +743,8 @@ document.body.onkeydown = (e) => {
     gameDebugElement.innerHTML = `${difficultyPercentage}`;
     gameDebugElement.animate({ opacity: [1, 0] }, 500);
   }
-  winNum = keyValuePairsForWinNum[e.keyCode];
+  if (keyValuePairsForWinNum[e.keyCode])
+    winNum = keyValuePairsForWinNum[e.keyCode];
   console.log("winNum: ", winNum);
 };
 

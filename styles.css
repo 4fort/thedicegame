@@ -341,9 +341,6 @@ button {
   background: blue;
   color: white;
 }
-#gameResults .gameSummary span::before {
-  /* content: "* "; */
-}
 #gameResults .gameSummary .lose {
   opacity: 0.3;
 }

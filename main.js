@@ -21,8 +21,8 @@ const blackBarsElement = document.getElementById("blackBars");
 
 const GAME_METADATA = {
   major: 1,
-  minor: 3,
-  patch: 5,
+  minor: 4,
+  patch: 0,
   stage: "",
 };
 
@@ -35,6 +35,11 @@ const GAME_1_VALUES = {
 const GAME_2_VALUES = {
   TURNS_PER_GAME: 7,
   PASSING_SCORE: 3,
+  DEFAULT_DIFFICULTY: 0.5,
+};
+const GAME_3_VALUES = {
+  TURNS_PER_GAME: 9999,
+  PASSING_SCORE: 9999,
   DEFAULT_DIFFICULTY: 0.5,
 };
 // const DEFAULT_DIFFICULTY = 0.5;
@@ -60,16 +65,18 @@ let timesPlayed = 0;
 let itsMorhpingTime = 3;
 let difficultyPercentage;
 
+let isInfinite = false;
+
 const showHud = (isShown) => {
-  // console.log(isShown);
+  console.log("isInfinite: ", isInfinite);
   if (isShown) {
     dice.style.pointerEvents = "all";
-    guessButtonsContainer.style.display = "flex";
     guideControlsElement.style.display = "flex";
+    guessButtonsContainer.style.display = "flex";
   } else {
     dice.style.pointerEvents = "none";
-    guessButtonsContainer.style.display = "none";
     guideControlsElement.style.display = "none";
+    guessButtonsContainer.style.display = "none";
   }
   dice.style.animation = "none";
 };
@@ -84,6 +91,9 @@ const gameModeSelect = (mode) => {
       break;
     case "game2":
       setup(GAME_2_VALUES);
+      break;
+    case "game3":
+      setup(GAME_3_VALUES);
       break;
   }
 };
@@ -111,7 +121,20 @@ const setup = ({ TURNS_PER_GAME, PASSING_SCORE, DEFAULT_DIFFICULTY }) => {
 
   gameStartElement.style.display = "none";
 
+  if (PASSING_SCORE === 9999 && TURNS_PER_GAME === 9999) {
+    isInfinite = true;
+    checkboardTableElement.innerHTML = `
+      <thead>
+        <th>Recent Dice Sides</th>
+      </thead>
+      <tbody id="checkboard">
+      </tbody>
+    `;
+    guessButtonsDisplay();
+  }
   showHud(true);
+  showScore();
+  coinDisplay();
 
   console.log("difficultyPercentage: ", difficultyPercentage);
 };
@@ -146,25 +169,28 @@ const emoteDisplay = () => {
 
 // COIN
 const coinDisplay = () => {
-  let animator = 0;
+  if (isInfinite) {
+    console.log("isInfinite: ", isInfinite);
+    hud_numberOfTries.remove();
+  } else {
+    let animator = 0;
+    setInterval(() => {
+      let triesLeftDisplay = tries ? tries : "O";
 
-  setInterval(() => {
-    let triesLeftDisplay = tries ? tries : "O";
-
-    if (tries === 0) {
-      triesLeftDisplay = "O";
-    }
-    hud_numberOfTries.innerHTML = `
-            <span>
-                [&nbsp${triesLeftDisplay}&nbsp*&nbsp]&nbsp
-            </span>
-            <img src="assets/coin/coin_${animator}.png" alt="">
-        `;
-    animator++;
-    if (animator == 8) animator = 0;
-  }, 100);
+      if (tries === 0) {
+        triesLeftDisplay = "O";
+      }
+      hud_numberOfTries.innerHTML = `
+              <span>
+                  [&nbsp${triesLeftDisplay}&nbsp*&nbsp]&nbsp
+              </span>
+              <img src="assets/coin/coin_${animator}.png" alt="">
+          `;
+      animator++;
+      if (animator == 8) animator = 0;
+    }, 100);
+  }
 };
-coinDisplay();
 
 // EMOTES
 let emoteWinLoseID;
@@ -180,51 +206,6 @@ const emoteDisplayWinOrLose = (win) => {
       emotes.innerHTML = `<img src="assets/emotes/emote_19.png" alt="">`;
     }
   }, 400);
-
-  // switch (diceSide) {
-  //   case 1:
-  //     setTimeout(() => {
-  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum1.png" alt="">`;
-  //       // console.log("emoteDisplayLose()");
-  //     }, 400);
-  //     break;
-  //   case 2:
-  //     setTimeout(() => {
-  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum2.png" alt="">`;
-  //       // console.log("emoteDisplayLose()");
-  //     }, 400);
-  //     break;
-  //   case 3:
-  //     setTimeout(() => {
-  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum3.png" alt="">`;
-  //       // console.log("emoteDisplayLose()");
-  //     }, 400);
-  //     break;
-  //   case 4:
-  //     setTimeout(() => {
-  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum4.png" alt="">`;
-  //       // console.log("emoteDisplayLose()");
-  //     }, 400);
-  //     break;
-  //   case 5:
-  //     setTimeout(() => {
-  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum5.png" alt="">`;
-  //       // console.log("emoteDisplayLose()");
-  //     }, 400);
-  //     break;
-  //   case 6:
-  //     setTimeout(() => {
-  //       emotes.innerHTML = `<img src="assets/emotes/emote_winNum6.png" alt="">`;
-  //       // console.log("emoteDisplayLose()");
-  //     }, 400);
-  //     break;
-  //   default:
-  //     setTimeout(() => {
-  //       emotes.innerHTML = `<img src="assets/emotes/emote_19.png" alt="">`;
-  //       // console.log("emoteDisplayLose()");
-  //     }, 400);
-  //     break;
-  // }
 
   const emoteWinLose = () => {
     if (win) {
@@ -267,27 +248,38 @@ const emoteDisplaySpinning = () => {
 
 // DISPLAY HUD
 const showScore = () => {
-  // hud_numberOfTries animates automaticall in line 36
-  let scoreDisplay = wins;
-  if (wins === 0) {
-    scoreDisplay = "O";
+  if (isInfinite) {
+    hud_score.remove();
+  } else {
+    // hud_numberOfTries animates automaticall in line 36
+    let scoreDisplay = wins;
+    if (wins === 0) {
+      scoreDisplay = "O";
+    }
+    hud_score.innerHTML = `
+          SCORE ${scoreDisplay}
+      `;
   }
-  hud_score.innerHTML = `
-        SCORE ${scoreDisplay}
-    `;
 };
-showScore();
 
 // DISPLAY THE SIX GUESS BUTTONS
 const guessButtonsDisplay = () => {
-  guessButtonsContainer.innerHTML = "";
-  for (let i = 1; i <= 6; i++) {
-    guessButtonsContainer.innerHTML += `
-        <div>
-            <input type="radio" name="guess_nums" value="${i}" onclick="guessButtonValue(this)" class="guess_radio" id="guessButton${i}">
-            <label class="guess_Button" for="guessButton${i}">${i}</label>
+  if (isInfinite) {
+    guessButtonsContainer.innerHTML = `
+        <div onclick="diceRoll()">
+            SPIN DICE
         </div>
-        `;
+    `;
+  } else {
+    guessButtonsContainer.innerHTML = "";
+    for (let i = 1; i <= 6; i++) {
+      guessButtonsContainer.innerHTML += `
+          <div>
+              <input type="radio" name="guess_nums" value="${i}" onclick="guessButtonValue(this)" class="guess_radio" id="guessButton${i}">
+              <label class="guess_Button" for="guessButton${i}">${i}</label>
+          </div>
+          `;
+    }
   }
 };
 guessButtonsDisplay();
@@ -384,17 +376,6 @@ const gameResultsDisplay = (e) => {
 
 // RANDOMIZES THE WINNING NUMBER
 const randomizer = () => {
-  //   if (DIFFICULTY === "easy") {
-  //     winNum = Math.random() < 0.9 ? guessNum : Math.floor(Math.random() * 6) + 1;
-  //   } else if (DIFFICULTY === "medium") {
-  //     winNum = Math.random() < 0.5 ? guessNum : Math.floor(Math.random() * 6) + 1;
-  //   } else if (DIFFICULTY === "hard") {
-  //     winNum = Math.random() < 0.1 ? guessNum : Math.floor(Math.random() * 6) + 1;
-  //   } else if (DIFFICULTY === "test") {
-  //     winNum = guessNum;
-  //     console.log(`TEST: ${winNum}, ${guessNum}`);
-  //   }
-
   winNum = Math.floor(Math.random() * 6) + 1;
   console.log("===========================");
   console.log("Winning number is: ", winNum);
@@ -414,56 +395,61 @@ const guessButtonValue = (e) => {
 const diceRoll = () => {
   if (inputValidation()) {
     incrementTimesPlayed();
-
-    // console.log(`${guessNum} INPUT`);
-    // console.log(`${tries - 1} TRIES`);
-    // ADDS SCORE WHEN USER GUESSES CORRECTLY
-    if (guessNum == winNum) {
-      wins++;
-      console.log(`${wins} WINS`);
+    if (isInfinite) {
+      diceSide = winNum;
+      rollingDiceAnimation(diceSide);
+      console.log("Winning number is: ", winNum);
     } else {
-      console.log(`${wins} WINS`);
-    }
+      // console.log(`${guessNum} INPUT`);
+      // console.log(`${tries - 1} TRIES`);
+      // ADDS SCORE WHEN USER GUESSES CORRECTLY
+      if (guessNum == winNum) {
+        wins++;
+        console.log(`${wins} WINS`);
+      } else {
+        console.log(`${wins} WINS`);
+      }
 
-    // DECREMENTS NUMBER OF TRIES EVERY USER TRY
-    tries--;
+      // DECREMENTS NUMBER OF TRIES EVERY USER TRY
+      tries--;
 
-    // PUSHES USER GUESSES TO AN ARRAY AND DISPLAYS IT
-    guessLog.push(guessNum);
-    // guessLogOutput.innerHTML = guessLog.join(" - ");
+      // PUSHES USER GUESSES TO AN ARRAY AND DISPLAYS IT
+      guessLog.push(guessNum);
+      // guessLogOutput.innerHTML = guessLog.join(" - ");
 
-    // STORES A NUMBER FROM LAST TURN NUMBERS. BECAUSE THE WINNUM IS PREDEFINED BEFORE THE GAME EVEN STARTED
-    diceSide = winNum;
-    guessSide = guessNum;
-    rollingDiceAnimation(diceSide, guessSide, false);
+      // STORES A NUMBER FROM LAST TURN NUMBERS. BECAUSE THE WINNUM IS PREDEFINED BEFORE THE GAME EVEN STARTED
+      diceSide = winNum;
+      guessSide = guessNum;
+      rollingDiceAnimation(diceSide, guessSide, false);
 
-    // RANDOMIZES EVERYTIME I CLICK THE DICE
-    randomizer();
+      // RANDOMIZES EVERYTIME I CLICK THE DICE
+      randomizer();
 
-    // if (wins === qualifyingScore) {
-    //   setTimeout(() => {
-    //     gameResultsDisplay(true);
-    //   }, globalDelay);
-    // } else if (tries < qualifyingScore) {
-    //   setTimeout(() => {
-    //     gameResultsDisplay(false);
-    //   }, globalDelay);
-    // }
+      // if (wins === qualifyingScore) {
+      //   setTimeout(() => {
+      //     gameResultsDisplay(true);
+      //   }, globalDelay);
+      // } else if (tries < qualifyingScore) {
+      //   setTimeout(() => {
+      //     gameResultsDisplay(false);
+      //   }, globalDelay);
+      // }
 
-    // IF USER TRIES REACHES 0, THE GAME ENDS
-    if (tries === 0) {
-      // IF USER SCORES AT LEAST 3, OUTPUTS 'YOU WIN!', OTHERWISE 'YOU LOSE!'
-      setTimeout(() => {
-        if (wins >= qualifyingScore) {
-          // SHOWS GAME RESTART POPUP WHEN GAME ENDS
-          gameResultsDisplay(true);
-          emoteDisplayWinOrLose(true);
-        } else {
-          // SHOWS GAME RESTART POPUP WHEN GAME ENDS
-          gameResultsDisplay(false);
-          emoteDisplayWinOrLose(false);
-        }
-      }, globalDelay);
+      // IF USER TRIES REACHES 0, THE GAME ENDS
+      if (tries === 0) {
+        // IF USER SCORES AT LEAST 3, OUTPUTS 'YOU WIN!', OTHERWISE 'YOU LOSE!'
+        setTimeout(() => {
+          if (wins >= qualifyingScore) {
+            // SHOWS GAME RESTART POPUP WHEN GAME ENDS
+            gameResultsDisplay(true);
+            emoteDisplayWinOrLose(true);
+          } else {
+            // SHOWS GAME RESTART POPUP WHEN GAME ENDS
+            gameResultsDisplay(false);
+            emoteDisplayWinOrLose(false);
+          }
+        }, globalDelay);
+      }
     }
   }
 };
@@ -578,7 +564,11 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
   showBlackBars();
 
   setTimeout(() => {
-    if (!isRestart) {
+    if (isInfinite) {
+      rightGuessDisplay();
+      correctOrNot.innerHTML = `The number is ${diceSide}!`;
+      emoteDisplayWinOrLose(true);
+    } else if (!isRestart) {
       if (diceSide === guessSide) {
         rightGuessDisplay();
         correctOrNot.innerHTML = "You guessed right!";
@@ -600,17 +590,18 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
       // winNumLogOutput.innerHTML = winNumLog.join(" - ");
     }
 
-    if (tries !== 0) showHud(true);
-
-    if (wins === qualifyingScore) {
-      showHud(false);
-      gameResultsDisplay(true);
-      emoteDisplayWinOrLose(true);
-      screenFlashWin(true);
-    } else if (wins < qualifyingScore - tries) {
-      showHud(false);
-      gameResultsDisplay(false);
-      emoteDisplayWinOrLose(false);
+    showHud(tries !== 0);
+    if (qualifyingScore !== 9999) {
+      if (wins === qualifyingScore) {
+        showHud(false);
+        gameResultsDisplay(true);
+        emoteDisplayWinOrLose(true);
+        screenFlashWin(true);
+      } else if (wins < qualifyingScore - tries) {
+        showHud(false);
+        gameResultsDisplay(false);
+        emoteDisplayWinOrLose(false);
+      }
     }
 
     showScore();
@@ -620,7 +611,9 @@ const rollingDiceAnimation = (diceSide, guessSide, isRestart) => {
 
 // VALIDATES IF THE USER SELECTS A NUMBER FROM THE BUTTONS
 const inputValidation = () => {
-  if (guessNum == null) {
+  if (isInfinite) {
+    return true;
+  } else if (guessNum == null) {
     correctOrNot.innerHTML = "Please select any number from below.";
     emoteDisplayInvalid();
     emoteRandomizer = Math.floor(Math.random() * 4);
@@ -845,10 +838,15 @@ const screenShake = (() => {
 })();
 
 const displayCheckboard = (isWin) => {
-  if (isWin)
-    checkboardElement.innerHTML += `<tr class="win"><td>${diceSide}</td><td>${guessSide}</td><td>✓</td></tr>`;
-  else
+  if (isInfinite) {
+    console.log("HERE:", checkboardElement);
     checkboardElement.innerHTML += `<tr><td>${diceSide}</td><td>${guessSide}</td><td>✗</td></tr>`;
+  } else {
+    if (isWin)
+      checkboardElement.innerHTML += `<tr class="win"><td>${diceSide}</td><td>${guessSide}</td><td>✓</td></tr>`;
+    else
+      checkboardElement.innerHTML += `<tr><td>${diceSide}</td><td>${guessSide}</td><td>✗</td></tr>`;
+  }
 };
 
 const showBlackBars = () => {

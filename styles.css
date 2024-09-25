@@ -308,6 +308,9 @@ button {
 #gameStart #gameStartMenu button span {
   font-family: "TitleFont", sans-serif;
 }
+#gameStart #gameStartMenu #game3 {
+  font-size: 2rem;
+}
 #gameResults h1 {
   --text-shadow-pos: 0.4rem;
   text-shadow: var(--text-shadow-pos) var(--text-shadow-pos) rgb(131, 58, 180);

@@ -850,8 +850,8 @@ const screenShake = (() => {
 
 const displayCheckboard = (isWin) => {
   if (isInfinite) {
-    console.log("HERE:", checkboardElement);
     checkboardElement.innerHTML += `<tr><td>${diceSide}</td></tr>`;
+    checkboardElement.scrollTop = checkboardElement.scrollHeight;
   } else {
     if (isWin)
       checkboardElement.innerHTML += `<tr class="win"><td>${diceSide}</td><td>${guessSide}</td><td>✓</td></tr>`;

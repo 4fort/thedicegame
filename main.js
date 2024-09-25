@@ -274,11 +274,7 @@ const showScore = () => {
 // DISPLAY THE SIX GUESS BUTTONS
 const guessButtonsDisplay = () => {
   if (isInfinite) {
-    guessButtonsContainer.innerHTML = `
-        <div onclick="diceRoll()">
-            SPIN DICE
-        </div>
-    `;
+    guessButtonsContainer.remove();
   } else {
     guessButtonsContainer.innerHTML = "";
     for (let i = 1; i <= 6; i++) {
@@ -850,7 +846,15 @@ const screenShake = (() => {
 
 const displayCheckboard = (isWin) => {
   if (isInfinite) {
-    checkboardElement.innerHTML += `<tr><td>${diceSide}</td></tr>`;
+    const currentLatest = checkboardElement.querySelector(".latest");
+    if (currentLatest) currentLatest.classList.remove("latest");
+
+    const newRow = document.createElement("tr");
+    newRow.innerHTML += `<td>${diceSide}</td>`;
+
+    newRow.classList.add("latest");
+    checkboardElement.appendChild(newRow);
+
     checkboardElement.scrollTop = checkboardElement.scrollHeight;
   } else {
     if (isWin)
